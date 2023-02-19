@@ -17,7 +17,7 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @Column(unique = true)
     private String email;
     @Column
     private String password;
@@ -27,6 +27,9 @@ public class Student {
     private String surname;
     @Column
     private String fatherhood;
+    @Column
+    private Boolean approved;
+
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Ticket ticket;
 

@@ -50,18 +50,19 @@ public class StudentService implements IStudentService {
     }
 
     @Override
-    public StudentDto checkLogin(StudentLoginPayload loginPayload) {
+    public Student checkLogin(StudentLoginPayload loginPayload) {
         //validate loginPayload
         String email = loginPayload.getEmail();
         //validate email
         Student student = studentRepository.findByEmail(email);
         if(Objects.nonNull(student) && loginPayload.getPassword().equals(student.getPassword())){
-            return StudentDto.builder()
-                    .name(student.getName())
-                    .surname(student.getSurname())
-                    .fatherhood(student.getFatherhood())
-                    .email(student.getEmail())
-                    .build();
+//            return StudentDto.builder()
+//                    .name(student.getName())
+//                    .surname(student.getSurname())
+//                    .fatherhood(student.getFatherhood())
+//                    .email(student.getEmail())
+//                    .build();
+            return student;
         }
         throw new NotFoundException("Provided invalid data for login");
     }

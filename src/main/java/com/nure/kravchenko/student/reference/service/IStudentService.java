@@ -8,7 +8,7 @@ import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
 public interface IStudentService {
     StudentDto create(CreateStudentPayload createStudentPayload);
 
-    StudentDto checkLogin(StudentLoginPayload loginPayload);
+    Student checkLogin(StudentLoginPayload loginPayload);
 
     Student findStudentById(Long id);
 }

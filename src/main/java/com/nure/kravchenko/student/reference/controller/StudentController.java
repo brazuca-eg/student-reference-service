@@ -32,9 +32,9 @@ public class StudentController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<StudentDto> login(@RequestBody StudentLoginPayload loginPayload) {
+    public ResponseEntity<Student> login(@RequestBody StudentLoginPayload loginPayload) {
         //validate student
-        StudentDto studentDto = studentService.checkLogin(loginPayload);
+        Student studentDto = studentService.checkLogin(loginPayload);
         return new ResponseEntity<>(studentDto, HttpStatus.OK);
     }
 

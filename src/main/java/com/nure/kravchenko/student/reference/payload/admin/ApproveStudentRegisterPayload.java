@@ -1,4 +1,4 @@
-package com.nure.kravchenko.student.reference.payload;
+package com.nure.kravchenko.student.reference.payload.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateRequestPayload {
-
-    private String reasonName;
+public class ApproveStudentRegisterPayload {
+    private String groupName;
 
 }

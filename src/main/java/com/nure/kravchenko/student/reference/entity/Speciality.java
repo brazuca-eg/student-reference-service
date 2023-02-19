@@ -18,13 +18,13 @@ public class Speciality {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true)
     private String name;
 
-    @Column
+    @Column(unique = true)
     private String shortName;
 
-    @Column
+    @Column(unique = true)
     private Integer number;
 
     @OneToMany(mappedBy = "speciality")

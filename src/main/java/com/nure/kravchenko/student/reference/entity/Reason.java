@@ -18,10 +18,10 @@ public class Reason {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true, length = 120)
     private String name;
 
-    @Column
+    @Column(unique = true, length = 500)
     private String description;
 
     @OneToMany(mappedBy = "reason")

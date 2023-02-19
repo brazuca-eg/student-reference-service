@@ -20,7 +20,7 @@ public class StudentGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true, length = 20)
     private String name;
 
     @Column

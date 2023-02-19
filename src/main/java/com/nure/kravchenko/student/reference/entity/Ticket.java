@@ -20,7 +20,7 @@ public class Ticket {
 
     @Column
     private String serialNumber;
-    @Column
+    @Column(unique = true)
     private String number;
     @Column
     private LocalDate startDate;

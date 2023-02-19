@@ -1,23 +1,31 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <style>
+    body {background-color: antiquewhite; font-family: Verdana}
+    h1   {color: black;}
+    p    {color: black;}
+  </style>
 </head>
 
 <body>
-  <img src="https://nure.ua/wp-content/themes/nure/images/logo.png?v=2.0"/>
+  <div style="float: right">
+    <img src="https://nure.ua/wp-content/themes/nure/images/logo.png?v=2.0"/>
+  </div>
 
-  <h1>Довідка</h1>
+  <h1 align="center">Довідка</h1>
 
-  <p th:text="'Видана ' + ${fullName} + ' в тому, що (він(вона)) є (студентом(студенткою)) (4) курсу (денної(заочної)) навчання інституту(факультету)'"></p>
+  <p th:utext="'Видана ' + ${fullName} + ' в тому, що (він(вона)) є (студентом(студенткою)) (4) курсу (денної(заочної)) навчання інституту(факультету)'"></p>
   <p>Харківського технічного університету радіоелектроніки IV рівня акредитації.</p>
 
   <p>Термін навчання за освітньо-кваліфікаційним рівнем (бакалавр/магістр) з (початкова дата) по (кінцева дата).</p>
 
   <p>Довідка видана для подання до (місце вимоги довідки).</p>
-  <p>
-    <span th:text="'Today is: ' + ${fullName} + 'd'" th:remove="tag"></span>
-  </p>
+
+
+  <a th:href="@{https://nure.ua/universytet/kontakti}">Для більш детальної інформації звертайтеся до сайту університету</a>
 
 </body>
 </html>

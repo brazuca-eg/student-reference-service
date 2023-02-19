@@ -18,10 +18,10 @@ public class Faculty {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true)
     private String name;
 
-    @Column
+    @Column(unique = true)
     private String shortName;
 
     @OneToMany(mappedBy = "faculty")

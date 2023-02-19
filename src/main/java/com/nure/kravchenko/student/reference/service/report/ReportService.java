@@ -1,5 +1,6 @@
 package com.nure.kravchenko.student.reference.service.report;
 
+import com.lowagie.text.pdf.BaseFont;
 import com.nure.kravchenko.student.reference.dto.ReportInformation;
 import com.nure.kravchenko.student.reference.entity.Student;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.time.LocalDate;
@@ -25,7 +27,6 @@ public class ReportService {
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(templateResolver);
 
-
         Context context = new Context(new Locale("RU"));
         context.setVariable("fullName", reportInformation.getFullName());
 
@@ -38,12 +39,15 @@ public class ReportService {
 
         LocalDate currentDate = LocalDate.now();
         String reportName = student.getName() + "_" + student.getSurname() + "_" + currentDate + ".pdf";
-        String outputFolder = "D:\\Back\\student-reference-service\\src\\main\\resources\\reports\\" + reportName;
+        String outputFolder = "D:\\Java\\Diploma\\Backend\\student-reference-service\\src\\main\\resources\\reports" + reportName;
 
         OutputStream outputStream = new FileOutputStream(outputFolder);
 
-        ITextRenderer renderer = new ITextRenderer();
+        ClassLoader classLoader = getClass().getClassLoader();
+        File fontFile = new File(classLoader.getResource("static/verdana.ttf").getFile());
 
+        ITextRenderer renderer = new ITextRenderer();
+        renderer.getFontResolver().addFont(fontFile.getPath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         renderer.setDocumentFromString(parseThymeleafTemplate(reportInformation));
         renderer.layout();
         renderer.createPDF(outputStream);
