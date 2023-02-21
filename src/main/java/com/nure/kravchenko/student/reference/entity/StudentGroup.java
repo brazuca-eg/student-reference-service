@@ -1,9 +1,8 @@
 package com.nure.kravchenko.student.reference.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(exclude = {"students"})
 @Entity(name = "student_group")
 public class StudentGroup {
 
@@ -32,10 +32,20 @@ public class StudentGroup {
     private String learnForm;
 
     @OneToMany(mappedBy = "studentGroup")
+    @JsonManagedReference
     private List<Student> students;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "speciality_id")
+    @JsonBackReference
     private Speciality speciality;
 
+    @JsonManagedReference
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
 }

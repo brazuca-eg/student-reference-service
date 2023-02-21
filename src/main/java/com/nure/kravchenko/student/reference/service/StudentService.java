@@ -35,12 +35,6 @@ public class StudentService implements IStudentService {
 
         Student created = studentRepository.save(student);
 
-        try {
-            reportService.generatePdfFromHtml(created);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
         return StudentDto.builder()
                 .name(created.getName())
                 .surname(created.getSurname())

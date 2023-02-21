@@ -1,9 +1,8 @@
 package com.nure.kravchenko.student.reference.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(exclude = {"studentGroup"})
 @Entity
 public class Student {
     @Id
@@ -28,9 +28,12 @@ public class Student {
     @Column
     private String fatherhood;
     @Column
-    private Boolean approved;
+    private Character gender;
+    @Column
+    private Boolean approved = false;
 
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
     private Ticket ticket;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -38,5 +41,15 @@ public class Student {
     private StudentGroup studentGroup;
 
     @OneToMany(mappedBy = "student")
+    @JsonManagedReference
     private List<Request> requests;
+
+    @JsonBackReference
+    public StudentGroup getStudentGroup() {
+        return studentGroup;
+    }
+
+    public void setStudentGroup(StudentGroup studentGroup) {
+        this.studentGroup = studentGroup;
+    }
 }

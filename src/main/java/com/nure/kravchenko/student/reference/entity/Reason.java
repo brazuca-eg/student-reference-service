@@ -1,5 +1,6 @@
 package com.nure.kravchenko.student.reference.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,5 +26,6 @@ public class Reason {
     private String description;
 
     @OneToMany(mappedBy = "reason")
+    @JsonManagedReference
     private List<Request> requests;
 }

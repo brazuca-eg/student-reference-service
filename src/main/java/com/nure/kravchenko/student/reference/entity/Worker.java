@@ -1,5 +1,7 @@
 package com.nure.kravchenko.student.reference.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,8 +41,10 @@ public class Worker {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "faculty_id")
+    @JsonBackReference
     private Faculty faculty;
 
     @OneToMany(mappedBy = "worker")
+    @JsonManagedReference
     private List<Request> requests;
 }

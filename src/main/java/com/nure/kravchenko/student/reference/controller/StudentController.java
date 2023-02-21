@@ -1,8 +1,11 @@
 package com.nure.kravchenko.student.reference.controller;
 
 import com.nure.kravchenko.student.reference.dto.StudentDto;
+import com.nure.kravchenko.student.reference.dto.StudentGroupDto;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Student;
+import com.nure.kravchenko.student.reference.entity.StudentGroup;
+import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.CreateRequestPayload;
 import com.nure.kravchenko.student.reference.payload.CreateStudentPayload;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
@@ -11,6 +14,8 @@ import com.nure.kravchenko.student.reference.service.IStudentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/student")
@@ -43,6 +48,30 @@ public class StudentController {
         Student student = studentService.findStudentById(id);
         Request createdRequest = requestService.createRequest(student, requestPayload);
         return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+        Student student = studentService.findStudentById(id);
+
+        return new ResponseEntity<>(student, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/group")
+    public ResponseEntity<StudentGroupDto> getGroupByStudent(@PathVariable Long id) {
+        Student student = studentService.findStudentById(id);
+
+        StudentGroup studentGroup = student.getStudentGroup();
+        if(Objects.nonNull(studentGroup)){
+            StudentGroupDto studentDto = StudentGroupDto.builder()
+                    .name(studentGroup.getName())
+                    .startYear(studentGroup.getStartYear())
+                    .endYear(studentGroup.getEndYear())
+                    .learnForm(studentGroup.getLearnForm())
+                    .build();
+            return new ResponseEntity<>(studentDto, HttpStatus.OK);
+        }
+        throw new NotFoundException("Student not in a group ex");
     }
 
 }
