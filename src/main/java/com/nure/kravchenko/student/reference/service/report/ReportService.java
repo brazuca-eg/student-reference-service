@@ -2,10 +2,11 @@ package com.nure.kravchenko.student.reference.service.report;
 
 import com.lowagie.text.pdf.BaseFont;
 import com.nure.kravchenko.student.reference.dto.ReportInformation;
-import com.nure.kravchenko.student.reference.entity.Faculty;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.StudentGroup;
+import com.nure.kravchenko.student.reference.service.s3.StorageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -41,6 +42,13 @@ public class ReportService {
     private static final String END_DATE = "endDate";
 
     private static final String REASON = "reason";
+
+    @Autowired
+    private final StorageService storageService;
+
+    public ReportService(StorageService storageService) {
+        this.storageService = storageService;
+    }
 
     private String parseThymeleafTemplate(ReportInformation reportInformation) {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
@@ -85,7 +93,7 @@ public class ReportService {
 
         LocalDate currentDate = LocalDate.now();
         String reportName = student.getName() + "_" + student.getSurname() + "_" + currentDate + ".pdf";
-        String outputFolder = "D:\\Java\\Diploma\\Backend\\student-reference-service\\src\\main\\resources\\reports" + reportName;
+        String outputFolder = "D:\\Java\\Diploma\\Backend\\student-reference-service\\src\\main\\resources\\reports\\" + reportName;
 
         OutputStream outputStream = new FileOutputStream(outputFolder);
 
@@ -99,5 +107,10 @@ public class ReportService {
         renderer.createPDF(outputStream);
 
         outputStream.close();
+
+        File file =  new File("D:\\Java\\Diploma\\Backend\\student-reference-service\\src\\main\\resources\\reports\\Аліна_Мільник_2023-02-21.pdf");
+        if(file.exists()){
+            storageService.uploadFile(file);
+        }
     }
 }
