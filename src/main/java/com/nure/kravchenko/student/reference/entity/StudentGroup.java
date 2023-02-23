@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"students"})
+@ToString(exclude = {"students", "speciality"})
 @Entity(name = "student_group")
 public class StudentGroup {
 
@@ -40,12 +40,4 @@ public class StudentGroup {
     @JsonBackReference
     private Speciality speciality;
 
-    @JsonManagedReference
-    public List<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(List<Student> students) {
-        this.students = students;
-    }
 }

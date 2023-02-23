@@ -7,6 +7,7 @@ import com.nure.kravchenko.student.reference.payload.CreateStudentPayload;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
 import com.nure.kravchenko.student.reference.repository.StudentRepository;
 import com.nure.kravchenko.student.reference.service.report.ReportService;
+import com.nure.kravchenko.student.reference.service.utils.ValidationUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -25,6 +26,7 @@ public class StudentService implements IStudentService {
     @Override
     public StudentDto create(CreateStudentPayload createStudentPayload) {
         //validate payload
+        //if(ValidationUtils.isValidEmailAddress())
         Student student = Student.builder()
                 .name(createStudentPayload.getName())
                 .surname(createStudentPayload.getSurname())
@@ -68,5 +70,10 @@ public class StudentService implements IStudentService {
             return optionalStudent.get();
         }
         throw new NotFoundException("There are problems with user id");
+    }
+
+
+    public Student save(Student student) {
+        return studentRepository.save(student);
     }
 }

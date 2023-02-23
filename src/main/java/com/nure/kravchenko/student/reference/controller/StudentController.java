@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Objects;
 
 @RestController
@@ -44,7 +45,8 @@ public class StudentController {
     }
 
     @PostMapping("/{id}/request")
-    public ResponseEntity<Request> createRequest(@PathVariable Long id, @RequestBody CreateRequestPayload requestPayload) {
+    public ResponseEntity<Request> createRequest(@PathVariable Long id,
+                                                 @Valid @RequestBody CreateRequestPayload requestPayload) {
         Student student = studentService.findStudentById(id);
         Request createdRequest = requestService.createRequest(student, requestPayload);
         return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
@@ -62,7 +64,7 @@ public class StudentController {
         Student student = studentService.findStudentById(id);
 
         StudentGroup studentGroup = student.getStudentGroup();
-        if(Objects.nonNull(studentGroup)){
+        if (Objects.nonNull(studentGroup)) {
             StudentGroupDto studentDto = StudentGroupDto.builder()
                     .name(studentGroup.getName())
                     .startYear(studentGroup.getStartYear())

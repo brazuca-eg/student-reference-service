@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"studentGroup"})
+@ToString(exclude = {"ticket", "studentGroup", "requests"})
 @Entity
 public class Student {
     @Id
@@ -38,18 +38,11 @@ public class Student {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "student_group_id")
+    @JsonBackReference
     private StudentGroup studentGroup;
 
     @OneToMany(mappedBy = "student")
     @JsonManagedReference
     private List<Request> requests;
 
-    @JsonBackReference
-    public StudentGroup getStudentGroup() {
-        return studentGroup;
-    }
-
-    public void setStudentGroup(StudentGroup studentGroup) {
-        this.studentGroup = studentGroup;
-    }
 }

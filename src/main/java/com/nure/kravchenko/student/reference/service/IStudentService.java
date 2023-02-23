@@ -11,4 +11,7 @@ public interface IStudentService {
     Student checkLogin(StudentLoginPayload loginPayload);
 
     Student findStudentById(Long id);
+
+    Student save(Student student);
+
 }
