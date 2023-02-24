@@ -108,9 +108,10 @@ public class ReportService {
 
         outputStream.close();
 
-        File file =  new File("D:\\Java\\Diploma\\Backend\\student-reference-service\\src\\main\\resources\\reports\\Аліна_Мільник_2023-02-21.pdf");
-        if(file.exists()){
-            storageService.uploadFile(file);
-        }
+        //S3
+//        File file =  new File("D:\\Java\\Diploma\\Backend\\student-reference-service\\src\\main\\resources\\reports\\Аліна_Мільник_2023-02-21.pdf");
+//        if(file.exists()){
+//            storageService.uploadFile(file);
+//        }
     }
 }

@@ -33,6 +33,7 @@ public class StudentService implements IStudentService {
                 .fatherhood(createStudentPayload.getFatherhood())
                 .email(createStudentPayload.getEmail())
                 .password(createStudentPayload.getPassword())
+                .gender(createStudentPayload.getGender())
                 .build();
 
         Student created = studentRepository.save(student);

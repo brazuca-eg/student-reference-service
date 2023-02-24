@@ -45,4 +45,14 @@ public class Student {
     @JsonManagedReference
     private List<Request> requests;
 
+    public void setTicket(Ticket ticket) {
+        ticket.setStudent(this);
+        this.ticket = ticket;
+    }
+
+    public void setStudentGroup(StudentGroup studentGroup) {
+        studentGroup.getStudents().add(this);
+        this.studentGroup = studentGroup;
+    }
+
 }

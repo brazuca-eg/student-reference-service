@@ -31,9 +31,9 @@ public class Ticket {
     @JsonBackReference
     private Student student;
 
-    public void setStudent(Student student) {
-        student.setTicket(this);
-        this.student = student;
-    }
+//    public void setStudent(Student student) {
+//        student.setTicket(this);
+//        this.student = student;
+//    }
 
 }

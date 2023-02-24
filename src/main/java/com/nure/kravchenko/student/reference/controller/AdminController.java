@@ -2,6 +2,7 @@ package com.nure.kravchenko.student.reference.controller;
 
 import com.nure.kravchenko.student.reference.entity.Reason;
 import com.nure.kravchenko.student.reference.entity.Student;
+import com.nure.kravchenko.student.reference.entity.StudentGroup;
 import com.nure.kravchenko.student.reference.entity.Ticket;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.admin.ApproveStudentRegisterPayload;
@@ -10,6 +11,7 @@ import com.nure.kravchenko.student.reference.payload.admin.CreateTicketPayload;
 import com.nure.kravchenko.student.reference.service.IRequestService;
 import com.nure.kravchenko.student.reference.service.IStudentService;
 import com.nure.kravchenko.student.reference.service.ReasonService;
+import com.nure.kravchenko.student.reference.service.StudentGroupService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,20 +29,24 @@ public class AdminController {
 
     private final ReasonService reasonService;
 
-    public AdminController(IStudentService studentService, IRequestService requestService, ReasonService reasonService) {
+    private final StudentGroupService studentGroupService;
+
+    public AdminController(IStudentService studentService, IRequestService requestService, ReasonService reasonService, StudentGroupService studentGroupService) {
         this.studentService = studentService;
         this.requestService = requestService;
         this.reasonService = reasonService;
+        this.studentGroupService = studentGroupService;
     }
 
-    @PostMapping("/student/{studentId}/approve")
-    public String approveStudentRegistration(@PathVariable Long studentId,
-                                             ApproveStudentRegisterPayload approveStudentRegisterPayload) {
-//        Student student = studentService.findStudentById(studentId);
-//        if(Objects.nonNull(student)){
-//
-//        }
-        return "";
+    @PostMapping("/students/{studentId}/approve")
+    public Student approveStudentRegistration(@PathVariable Long studentId,
+                                             @RequestBody ApproveStudentRegisterPayload approveStudentRegisterPayload) {
+        Student student = studentService.findStudentById(studentId);
+        StudentGroup studentGroup = studentGroupService.findGroupByName(approveStudentRegisterPayload.getGroupName());
+
+        student.setStudentGroup(studentGroup);
+
+        return student;
     }
 
     @PostMapping("/students/{studentId}/ticket")
@@ -57,8 +63,6 @@ public class AdminController {
                     .startDate(ticketPayload.getStartDate())
                     .endDate(ticketPayload.getEndDate())
                     .build();
-
-            // TODO: 23.02.2023   replace backward
             student.setTicket(ticket);
             studentService.save(student);
 

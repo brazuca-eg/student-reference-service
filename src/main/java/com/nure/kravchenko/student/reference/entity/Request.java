@@ -36,4 +36,9 @@ public class Request {
     @JoinColumn(name = "worker_id")
     private Worker worker;
 
+    public void setWorker(Worker worker) {
+        worker.getRequests().add(this);
+        this.worker = worker;
+    }
+
 }

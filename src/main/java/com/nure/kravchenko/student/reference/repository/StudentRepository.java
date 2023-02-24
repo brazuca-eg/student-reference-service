@@ -10,4 +10,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query("SELECT s FROM Student s WHERE s.email = ?1")
     Student findByEmail(String email);
+
+//    @Query(value = "INSERT INTO student(ticket_id) values(?1)", nativeQuery = true)
+//    Ticket addTicket(Long ticketId);
+
 }
