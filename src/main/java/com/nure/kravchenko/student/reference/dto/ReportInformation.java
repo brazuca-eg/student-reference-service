@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReportInformation {
     private String fullName;
+
     private String gender;
 
     private String studentGender;
@@ -28,4 +29,6 @@ public class ReportInformation {
     private String endDate;
 
     private String reason;
+
+    private String reportDate;
 }

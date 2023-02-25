@@ -31,6 +31,9 @@ public class StudentGroup {
     @Column
     private String learnForm;
 
+    @Column
+    private String degreeForm;
+
     @OneToMany(mappedBy = "studentGroup")
     @JsonManagedReference
     private List<Student> students;

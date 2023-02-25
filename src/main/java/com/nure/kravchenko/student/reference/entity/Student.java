@@ -30,7 +30,7 @@ public class Student {
     @Column
     private Character gender;
     @Column
-    private Boolean approved = false;
+    private boolean approved;
 
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference

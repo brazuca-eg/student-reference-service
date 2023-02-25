@@ -32,7 +32,7 @@ public class Worker {
     private String fatherhood;
 
     @Column
-    private Boolean isAdmin;
+    private boolean isAdmin;
 
     @Column
     private String jobTitle;
