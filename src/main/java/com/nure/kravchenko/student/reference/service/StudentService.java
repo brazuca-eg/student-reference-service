@@ -25,8 +25,6 @@ public class StudentService implements IStudentService {
 
     @Override
     public StudentDto create(CreateStudentPayload createStudentPayload) {
-        //validate payload
-        //if(ValidationUtils.isValidEmailAddress())
         Student student = Student.builder()
                 .name(createStudentPayload.getName())
                 .surname(createStudentPayload.getSurname())
@@ -34,6 +32,7 @@ public class StudentService implements IStudentService {
                 .email(createStudentPayload.getEmail())
                 .password(createStudentPayload.getPassword())
                 .gender(createStudentPayload.getGender())
+                .approved(false)
                 .build();
 
         Student created = studentRepository.save(student);
@@ -43,23 +42,19 @@ public class StudentService implements IStudentService {
                 .surname(created.getSurname())
                 .fatherhood(created.getFatherhood())
                 .email(created.getEmail())
+                .gender(created.getGender())
+                .approved(created.isApproved())
                 .build();
     }
 
     @Override
     public Student checkLogin(StudentLoginPayload loginPayload) {
-        //validate loginPayload
         String email = loginPayload.getEmail();
-        //validate email
-        Student student = studentRepository.findByEmail(email);
-        if(Objects.nonNull(student) && loginPayload.getPassword().equals(student.getPassword())){
-//            return StudentDto.builder()
-//                    .name(student.getName())
-//                    .surname(student.getSurname())
-//                    .fatherhood(student.getFatherhood())
-//                    .email(student.getEmail())
-//                    .build();
-            return student;
+        if (ValidationUtils.isValidEmailAddress(email)) {
+            Student student = studentRepository.findByEmail(email);
+            if (Objects.nonNull(student) && loginPayload.getPassword().equals(student.getPassword())) {
+                return student;
+            }
         }
         throw new NotFoundException("Provided invalid data for login");
     }

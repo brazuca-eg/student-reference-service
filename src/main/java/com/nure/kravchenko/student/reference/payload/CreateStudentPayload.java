@@ -5,25 +5,30 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CreateStudentPayload {
-    @NotEmpty
+    @NotEmpty(message = "The name can't be empty")
     private String name;
-    @NotEmpty
+
+    @NotEmpty(message = "The surname can't be empty")
     private String surname;
-    @NotEmpty
+
+    @NotEmpty(message = "The fatherhood can't be empty")
     private String fatherhood;
-    @NotEmpty
+
+    @NotEmpty(message = "The gender can't be empty")
+    @Size(message = "The gender contain only one character")
     private Character gender;
-    @NotEmpty
-    @Email
+
+    @NotEmpty(message = "The email can't be empty")
     private String email;
-    @NotEmpty
+
+    @NotEmpty(message = "The password can't be empty")
     private String password;
 }

@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
 @Data
@@ -13,10 +13,10 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @Builder
 public class StudentLoginPayload {
-    @NotEmpty
-    @Email
+    @NotEmpty(message = "The email can't be empty")
     private String email;
 
-    @NotEmpty
+    @NotEmpty(message = "The password can't be empty")
+    @Min(value = 6, message = "The password must contain at least more than 6 characters")
     private String password;
 }

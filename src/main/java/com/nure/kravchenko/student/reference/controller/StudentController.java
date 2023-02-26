@@ -20,6 +20,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/student")
+//@Validated
 public class StudentController {
     private final IStudentService studentService;
 
@@ -32,13 +33,12 @@ public class StudentController {
 
     @PostMapping("/register")
     public ResponseEntity<StudentDto> register(@RequestBody CreateStudentPayload createStudentPayload) {
-        //validate student
         StudentDto studentDto = studentService.create(createStudentPayload);
         return new ResponseEntity<>(studentDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Student> login(@RequestBody StudentLoginPayload loginPayload) {
+    public ResponseEntity<Student> login(@RequestBody @Valid StudentLoginPayload loginPayload) {
         //validate student
         Student studentDto = studentService.checkLogin(loginPayload);
         return new ResponseEntity<>(studentDto, HttpStatus.OK);

@@ -40,12 +40,11 @@ public class WorkerController {
 
     @PostMapping("/{workerId}/requests/{requestId}/approve")
     public ResponseEntity<Request> approveRequest(@PathVariable Long workerId, @PathVariable Long requestId,
-                                                  @RequestParam Boolean approve){
+                                                  @RequestParam Boolean approve) {
         Worker worker = workerService.findWorkerById(workerId);
         Request request = requestService.findById(requestId);
 
         return new ResponseEntity<>(requestService.approveRequest(worker, request, approve), HttpStatus.OK);
     }
 
-    //private class ApprovePayload()
 }

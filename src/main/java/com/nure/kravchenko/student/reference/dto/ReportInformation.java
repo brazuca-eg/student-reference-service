@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ReportInformation {
+
     private String fullName;
 
     private String gender;
@@ -31,4 +32,5 @@ public class ReportInformation {
     private String reason;
 
     private String reportDate;
+
 }

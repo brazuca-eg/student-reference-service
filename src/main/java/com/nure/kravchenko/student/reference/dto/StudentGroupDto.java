@@ -11,9 +11,13 @@ import java.time.LocalDate;
 @Setter
 @Builder
 public class StudentGroupDto {
+
     private String name;
+
     private LocalDate startYear;
+
     private LocalDate endYear;
+
     private String learnForm;
 
 }
