@@ -17,9 +17,9 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(length = 2)
     private String serialNumber;
-    @Column(unique = true)
+    @Column(unique = true, length = 12)
     private String number;
     @Column
     private LocalDate startDate;

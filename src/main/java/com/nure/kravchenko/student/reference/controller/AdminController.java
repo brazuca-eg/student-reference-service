@@ -39,8 +39,9 @@ public class AdminController {
     }
 
     @PostMapping("/students/{studentId}/approve")
-    public Student approveStudentRegistration(@PathVariable Long studentId,
-                                             @RequestBody ApproveStudentRegisterPayload approveStudentRegisterPayload) {
+    public Student approveStudentRegistration(
+            @PathVariable Long studentId,
+            @RequestBody @Valid ApproveStudentRegisterPayload approveStudentRegisterPayload) {
         Student student = studentService.findStudentById(studentId);
         StudentGroup studentGroup = studentGroupService.findGroupByName(approveStudentRegisterPayload.getGroupName());
 
@@ -72,7 +73,7 @@ public class AdminController {
     }
 
     @PostMapping("/reason")
-    public ResponseEntity<Reason> createReason(@Valid @RequestBody CreateReasonPayload reasonPayload) {
+    public ResponseEntity<Reason> createReason(@RequestBody @Valid CreateReasonPayload reasonPayload) {
         Reason reason = Reason.builder()
                 .name(reasonPayload.getName())
                 .description(reasonPayload.getDescription())

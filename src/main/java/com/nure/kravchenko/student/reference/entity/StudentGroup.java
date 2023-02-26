@@ -28,10 +28,10 @@ public class StudentGroup {
     @Column
     private LocalDate endYear;
 
-    @Column
+    @Column(length = 20)
     private String learnForm;
 
-    @Column
+    @Column(length = 20)
     private String degreeForm;
 
     @OneToMany(mappedBy = "studentGroup")

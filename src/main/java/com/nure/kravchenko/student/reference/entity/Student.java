@@ -19,15 +19,15 @@ public class Student {
     private Long id;
     @Column(unique = true)
     private String email;
-    @Column
+    @Column(length = 20)
     private String password;
-    @Column
+    @Column(length = 128)
     private String name;
-    @Column
+    @Column(length = 128)
     private String surname;
-    @Column
+    @Column(length = 128)
     private String fatherhood;
-    @Column
+    @Column(length = 1)
     private Character gender;
     @Column
     private boolean approved;
