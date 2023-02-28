@@ -17,6 +17,6 @@ public class StudentLoginPayload {
     private String email;
 
     @NotEmpty(message = "The password can't be empty")
-    @Min(value = 6, message = "The password must contain at least more than 6 characters")
+    //@Min(value = 4, message = "The password must contain at least more than 6 characters")
     private String password;
 }

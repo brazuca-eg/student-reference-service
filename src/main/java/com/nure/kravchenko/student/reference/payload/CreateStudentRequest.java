@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateStudentPayload {
+public class CreateStudentRequest {
     @NotEmpty(message = "The name can't be empty")
     private String name;
 

@@ -12,6 +12,8 @@ import java.time.LocalDate;
 @Builder
 public class StudentGroupDto {
 
+    private Long id;
+
     private String name;
 
     private LocalDate startYear;
@@ -19,5 +21,7 @@ public class StudentGroupDto {
     private LocalDate endYear;
 
     private String learnForm;
+
+    private String degreeForm;
 
 }

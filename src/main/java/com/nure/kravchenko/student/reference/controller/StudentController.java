@@ -7,7 +7,7 @@ import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.StudentGroup;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.CreateRequestPayload;
-import com.nure.kravchenko.student.reference.payload.CreateStudentPayload;
+import com.nure.kravchenko.student.reference.payload.CreateStudentRequest;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
 import com.nure.kravchenko.student.reference.service.IRequestService;
 import com.nure.kravchenko.student.reference.service.IStudentService;
@@ -19,9 +19,9 @@ import javax.validation.Valid;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/student")
-//@Validated
+@RequestMapping("/students")
 public class StudentController {
+
     private final IStudentService studentService;
 
     private final IRequestService requestService;
@@ -32,16 +32,20 @@ public class StudentController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<StudentDto> register(@RequestBody CreateStudentPayload createStudentPayload) {
-        StudentDto studentDto = studentService.create(createStudentPayload);
+    public ResponseEntity<StudentDto> register(@RequestBody CreateStudentRequest createStudentRequest) {
+        StudentDto studentDto = studentService.create(createStudentRequest);
         return new ResponseEntity<>(studentDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Student> login(@RequestBody @Valid StudentLoginPayload loginPayload) {
-        //validate student
-        Student studentDto = studentService.checkLogin(loginPayload);
+    public ResponseEntity<StudentDto> login(@RequestBody @Valid StudentLoginPayload loginPayload) {
+        StudentDto studentDto = studentService.checkLogin(loginPayload);
         return new ResponseEntity<>(studentDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+        return new ResponseEntity<>(studentService.findStudentById(id), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/request")
@@ -52,28 +56,9 @@ public class StudentController {
         return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
-        Student student = studentService.findStudentById(id);
-
-        return new ResponseEntity<>(student, HttpStatus.OK);
-    }
-
     @GetMapping("/{id}/group")
     public ResponseEntity<StudentGroupDto> getGroupByStudent(@PathVariable Long id) {
-        Student student = studentService.findStudentById(id);
-
-        StudentGroup studentGroup = student.getStudentGroup();
-        if (Objects.nonNull(studentGroup)) {
-            StudentGroupDto studentDto = StudentGroupDto.builder()
-                    .name(studentGroup.getName())
-                    .startYear(studentGroup.getStartYear())
-                    .endYear(studentGroup.getEndYear())
-                    .learnForm(studentGroup.getLearnForm())
-                    .build();
-            return new ResponseEntity<>(studentDto, HttpStatus.OK);
-        }
-        throw new NotFoundException("Student not in a group ex");
+        return new ResponseEntity<>(studentService.getStudentGroupByStudentId(id), HttpStatus.OK);
     }
 
 }

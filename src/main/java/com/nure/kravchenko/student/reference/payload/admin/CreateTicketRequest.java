@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateTicketPayload {
+public class CreateTicketRequest {
 
     @NotEmpty(message = "Serial number of the ticket can't be empty")
     @Size(min = 2, max = 2)
