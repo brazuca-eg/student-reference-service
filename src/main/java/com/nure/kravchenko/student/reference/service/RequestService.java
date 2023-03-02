@@ -1,5 +1,6 @@
 package com.nure.kravchenko.student.reference.service;
 
+import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.entity.*;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.CreateRequestPayload;
@@ -7,12 +8,16 @@ import com.nure.kravchenko.student.reference.repository.ReasonRepository;
 import com.nure.kravchenko.student.reference.repository.RequestRepository;
 import com.nure.kravchenko.student.reference.service.report.ReportService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RequestService implements IRequestService {
@@ -23,16 +28,19 @@ public class RequestService implements IRequestService {
 
     private final ReportService reportService;
 
-    public RequestService(RequestRepository requestRepository, ReasonRepository reasonRepository, ReportService reportService) {
+    private final ConversionService conversionService;
+
+    public RequestService(RequestRepository requestRepository, ReasonRepository reasonRepository, ReportService reportService, ConversionService conversionService) {
         this.requestRepository = requestRepository;
         this.reasonRepository = reasonRepository;
         this.reportService = reportService;
+        this.conversionService = conversionService;
     }
 
     @Override
     public Request findById(Long id) {
         Optional<Request> optionalRequest = requestRepository.findById(id);
-        if(optionalRequest.isPresent()){
+        if (optionalRequest.isPresent()) {
             return optionalRequest.get();
         }
         throw new NotFoundException("There are problems with request id");
@@ -62,9 +70,21 @@ public class RequestService implements IRequestService {
     }
 
     @Override
+    public List<RequestDto> findWaitingRequest(Worker worker) {
+        Faculty faculty = worker.getFaculty();
+        if (Objects.nonNull(faculty)) {
+            List<Request> requests = requestRepository.getWaitingRequestsForFaculty(faculty.getId());
+            return requests.stream()
+                    .map(request -> conversionService.convert(request, RequestDto.class))
+                    .collect(Collectors.toList());
+        }
+        throw new NotFoundException("There worker doesn't have a faculty");
+    }
+
+    @Override
     @Transactional
     public Request approveRequest(Worker worker, Request request, Boolean approved) {
-        if(approved){
+        if (approved) {
             request.setWorker(worker);
             request.setEndDate(LocalDateTime.now());
             Request savedRequest = requestRepository.save(request);

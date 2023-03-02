@@ -1,5 +1,8 @@
 package com.nure.kravchenko.student.reference.controller;
 
+import com.nure.kravchenko.student.reference.dto.FacultyDto;
+import com.nure.kravchenko.student.reference.dto.RequestDto;
+import com.nure.kravchenko.student.reference.dto.WorkerDto;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Worker;
 import com.nure.kravchenko.student.reference.service.IRequestService;
@@ -30,12 +33,27 @@ public class WorkerController {
         this.workerService = workerService;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<WorkerDto> getWorkerById(@PathVariable Long id) {
+        return new ResponseEntity<>(workerService.getWorkerDtoById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/faculty")
+    public ResponseEntity<FacultyDto> getWorkerFaculty(@PathVariable Long id) {
+        return new ResponseEntity<>(workerService.getWorkerFaculty(id), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/requests/assigned")
-    public ResponseEntity<List<Request>> workerRequests(@PathVariable Long id) {
+    public ResponseEntity<List<Request>> getAssignedWorkerRequests(@PathVariable Long id) {
         Worker worker = workerService.findWorkerById(id);
         List<Request> requests = worker.getRequests();
 
         return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/requests/nonAssigned")
+    public ResponseEntity<List<RequestDto>> getNonAssignedRequestsByWorkerFaculty(@PathVariable Long id) {
+        return new ResponseEntity<>(requestService.findWaitingRequest(workerService.findWorkerById(id)), HttpStatus.OK);
     }
 
     @PostMapping("/{workerId}/requests/{requestId}/approve")
