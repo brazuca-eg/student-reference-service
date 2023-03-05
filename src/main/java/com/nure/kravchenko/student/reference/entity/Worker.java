@@ -35,7 +35,13 @@ public class Worker {
     private boolean isAdmin;
 
     @Column
+    private boolean approved;
+
+    @Column
     private String jobTitle;
+
+    @Column(length = 1)
+    private Character gender;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "faculty_id")

@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateStudentRequest {
+public class RegistrationDto {
     @NotEmpty(message = "The name can't be empty")
     private String name;
 
@@ -22,8 +22,8 @@ public class CreateStudentRequest {
     @NotEmpty(message = "The fatherhood can't be empty")
     private String fatherhood;
 
-    @NotEmpty(message = "The gender can't be empty")
-    @Size(message = "The gender contain only one character")
+//    @NotEmpty(message = "The gender can't be empty")
+//    @Size(message = "The gender contain only one character")
     private Character gender;
 
     @NotEmpty(message = "The email can't be empty")
@@ -31,4 +31,7 @@ public class CreateStudentRequest {
 
     @NotEmpty(message = "The password can't be empty")
     private String password;
+
+    @NotEmpty(message = "The role can't be empty")
+    private String role;
 }

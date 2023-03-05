@@ -3,12 +3,11 @@ package com.nure.kravchenko.student.reference.service;
 import com.nure.kravchenko.student.reference.dto.StudentDto;
 import com.nure.kravchenko.student.reference.dto.StudentGroupDto;
 import com.nure.kravchenko.student.reference.entity.Student;
-import com.nure.kravchenko.student.reference.entity.StudentGroup;
-import com.nure.kravchenko.student.reference.payload.CreateStudentRequest;
+import com.nure.kravchenko.student.reference.payload.RegistrationDto;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
 
 public interface IStudentService {
-    StudentDto create(CreateStudentRequest createStudentRequest);
+    StudentDto create(RegistrationDto registrationDto);
 
     StudentDto checkLogin(StudentLoginPayload loginPayload);
 

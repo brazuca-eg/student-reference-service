@@ -5,7 +5,7 @@ import com.nure.kravchenko.student.reference.dto.StudentGroupDto;
 import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.StudentGroup;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
-import com.nure.kravchenko.student.reference.payload.CreateStudentRequest;
+import com.nure.kravchenko.student.reference.payload.RegistrationDto;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
 import com.nure.kravchenko.student.reference.repository.StudentRepository;
 import com.nure.kravchenko.student.reference.service.report.ReportService;
@@ -30,8 +30,8 @@ public class StudentService implements IStudentService {
     }
 
     @Override
-    public StudentDto create(CreateStudentRequest createStudentRequest) {
-        Student student = conversionService.convert(createStudentRequest, Student.class);
+    public StudentDto create(RegistrationDto registrationDto) {
+        Student student = conversionService.convert(registrationDto, Student.class);
 
         assert student != null;
         Student created = studentRepository.save(student);

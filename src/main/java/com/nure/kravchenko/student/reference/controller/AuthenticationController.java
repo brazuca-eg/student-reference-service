@@ -1,12 +1,20 @@
 package com.nure.kravchenko.student.reference.controller;
 
+import com.nure.kravchenko.student.reference.dto.StudentDto;
+import com.nure.kravchenko.student.reference.dto.WorkerDto;
 import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.Worker;
 import com.nure.kravchenko.student.reference.entity.app.Role;
+import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.AuthenticationRequestDTO;
+import com.nure.kravchenko.student.reference.payload.RegistrationDto;
 import com.nure.kravchenko.student.reference.repository.StudentRepository;
 import com.nure.kravchenko.student.reference.repository.WorkerRepository;
 import com.nure.kravchenko.student.reference.security.JwtTokenProvider;
+import com.nure.kravchenko.student.reference.service.StudentService;
+import com.nure.kravchenko.student.reference.service.WorkerService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +36,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthenticationRestController {
+public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
 
@@ -36,14 +44,21 @@ public class AuthenticationRestController {
 
     private final WorkerRepository workerRepository;
 
+    private final StudentService studentService;
+
+    private final WorkerService workerService;
+
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationRestController(AuthenticationManager authenticationManager,
-                                        StudentRepository studentRepository, WorkerRepository workerRepository,
-                                        JwtTokenProvider jwtTokenProvider) {
+    @Autowired
+    public AuthenticationController(AuthenticationManager authenticationManager,
+                                    StudentRepository studentRepository, WorkerRepository workerRepository,
+                                    StudentService studentService, WorkerService workerService, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.studentRepository = studentRepository;
         this.workerRepository = workerRepository;
+        this.studentService = studentService;
+        this.workerService = workerService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -76,6 +91,18 @@ public class AuthenticationRestController {
         } catch (AuthenticationException e) {
             return new ResponseEntity<>("Invalid email/password combination", HttpStatus.FORBIDDEN);
         }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody @Valid RegistrationDto registrationDto) {
+        if (StringUtils.equalsIgnoreCase(Role.WORKER.name(), registrationDto.getRole())) {
+            WorkerDto workerDto = workerService.create(registrationDto);
+            return new ResponseEntity<>(workerDto, HttpStatus.CREATED);
+        } else if (StringUtils.equalsIgnoreCase(Role.STUDENT.name(), registrationDto.getRole())) {
+            StudentDto studentDto = studentService.create(registrationDto);
+            return new ResponseEntity<>(studentDto, HttpStatus.CREATED);
+        }
+        throw new NotFoundException("There are problems with provided role for registration");
     }
 
     @PostMapping("/logout")

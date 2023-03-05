@@ -5,13 +5,11 @@ import com.nure.kravchenko.student.reference.dto.StudentGroupDto;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.payload.CreateRequestPayload;
-import com.nure.kravchenko.student.reference.payload.CreateStudentRequest;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
 import com.nure.kravchenko.student.reference.service.IRequestService;
 import com.nure.kravchenko.student.reference.service.IStudentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,12 +25,6 @@ public class StudentController {
     public StudentController(IStudentService studentService, IRequestService requestService) {
         this.studentService = studentService;
         this.requestService = requestService;
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<StudentDto> register(@RequestBody CreateStudentRequest createStudentRequest) {
-        StudentDto studentDto = studentService.create(createStudentRequest);
-        return new ResponseEntity<>(studentDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

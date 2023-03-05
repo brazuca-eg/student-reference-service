@@ -16,6 +16,7 @@ public class WorkerToWorkerDtoConverter  implements Converter<Worker, WorkerDto>
                 .email(worker.getEmail())
                 .isAdmin(worker.isAdmin())
                 .jobTitle(worker.getJobTitle())
+                .gender(worker.getGender())
                 .build();
     }
 

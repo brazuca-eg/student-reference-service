@@ -1,7 +1,6 @@
 package com.nure.kravchenko.student.reference.config;
 
 import com.nure.kravchenko.student.reference.entity.app.Permission;
-import com.nure.kravchenko.student.reference.entity.app.Role;
 import com.nure.kravchenko.student.reference.security.JwtConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

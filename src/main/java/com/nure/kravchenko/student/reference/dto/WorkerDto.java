@@ -26,4 +26,6 @@ public class WorkerDto {
 
     private String jobTitle;
 
+    private Character gender;
+
 }

@@ -14,7 +14,7 @@ import java.io.File;
 @Service
 public class EmailSenderService {
 
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String senderEmailAddress;
