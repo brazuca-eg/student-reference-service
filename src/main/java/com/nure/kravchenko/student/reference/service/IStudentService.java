@@ -7,6 +7,7 @@ import com.nure.kravchenko.student.reference.payload.RegistrationDto;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
 
 public interface IStudentService {
+
     StudentDto create(RegistrationDto registrationDto);
 
     StudentDto checkLogin(StudentLoginPayload loginPayload);
@@ -16,5 +17,7 @@ public interface IStudentService {
     Student save(Student student);
 
     StudentGroupDto getStudentGroupByStudentId(Long id);
+
+    Student findByEmail(String email);
 
 }

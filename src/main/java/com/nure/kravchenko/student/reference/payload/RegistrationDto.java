@@ -22,8 +22,7 @@ public class RegistrationDto {
     @NotEmpty(message = "The fatherhood can't be empty")
     private String fatherhood;
 
-//    @NotEmpty(message = "The gender can't be empty")
-//    @Size(message = "The gender contain only one character")
+    @NotEmpty(message = "The gender can't be empty")
     private Character gender;
 
     @NotEmpty(message = "The email can't be empty")

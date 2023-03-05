@@ -1,26 +1,27 @@
 package com.nure.kravchenko.student.reference.controller;
 
 import com.nure.kravchenko.student.reference.dto.StudentDto;
+import com.nure.kravchenko.student.reference.dto.UserLoggedInDto;
 import com.nure.kravchenko.student.reference.dto.WorkerDto;
 import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.Worker;
 import com.nure.kravchenko.student.reference.entity.app.Role;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
-import com.nure.kravchenko.student.reference.payload.AuthenticationRequestDTO;
+import com.nure.kravchenko.student.reference.payload.AuthenticationRequestDto;
 import com.nure.kravchenko.student.reference.payload.RegistrationDto;
-import com.nure.kravchenko.student.reference.repository.StudentRepository;
-import com.nure.kravchenko.student.reference.repository.WorkerRepository;
 import com.nure.kravchenko.student.reference.security.JwtTokenProvider;
 import com.nure.kravchenko.student.reference.service.StudentService;
 import com.nure.kravchenko.student.reference.service.WorkerService;
+import com.nure.kravchenko.student.reference.service.utils.ValidationUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,8 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
+import javax.validation.ValidationException;
 import java.util.Objects;
 
 @RestController
@@ -40,56 +40,69 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
 
-    private final StudentRepository studentRepository;
-
-    private final WorkerRepository workerRepository;
-
     private final StudentService studentService;
 
     private final WorkerService workerService;
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final ConversionService conversionService;
+
     @Autowired
-    public AuthenticationController(AuthenticationManager authenticationManager,
-                                    StudentRepository studentRepository, WorkerRepository workerRepository,
-                                    StudentService studentService, WorkerService workerService, JwtTokenProvider jwtTokenProvider) {
+    public AuthenticationController(AuthenticationManager authenticationManager, StudentService studentService,
+                                    WorkerService workerService, JwtTokenProvider jwtTokenProvider,
+                                    ConversionService conversionService) {
         this.authenticationManager = authenticationManager;
-        this.studentRepository = studentRepository;
-        this.workerRepository = workerRepository;
         this.studentService = studentService;
         this.workerService = workerService;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.conversionService = conversionService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody @Valid AuthenticationRequestDTO request) {
+    public ResponseEntity<UserLoggedInDto> authenticate(@RequestBody @Valid AuthenticationRequestDto request) {
+        String email = request.getEmail();
+        if (BooleanUtils.isFalse(ValidationUtils.isValidEmailAddress(email))) {
+            // TODO: 05.03.2023 Add email validation pattern exception
+            throw new ValidationException("The provided email is not match with @nure pattern");
+        }
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-
-            String token = "";
-            String email = request.getEmail();
-            Student student = studentRepository.findByEmail(email);
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+            String token;
+            String role;
+            Worker worker = null;
+            Student student = studentService.findByEmail(email);
             if (Objects.isNull(student)) {
-                Worker worker = workerRepository.findByEmail(email);
+                worker = workerService.findByEmail(email);
                 if (Objects.isNull(worker)) {
-                    throw new UsernameNotFoundException("User doesn't exists");
+                    throw new NotFoundException("The user doesn't exist");
                 } else {
                     if (worker.isAdmin()) {
-                        token = jwtTokenProvider.createToken(request.getEmail(), Role.ADMIN.name());
+                        role = Role.ADMIN.name();
+                        token = jwtTokenProvider.createToken(request.getEmail(), role);
                     } else {
-                        token = jwtTokenProvider.createToken(request.getEmail(), Role.WORKER.name());
+                        role = Role.WORKER.name();
+                        token = jwtTokenProvider.createToken(request.getEmail(), role);
                     }
                 }
             } else {
-                token = jwtTokenProvider.createToken(request.getEmail(), Role.STUDENT.name());
+                role = Role.STUDENT.name();
+                token = jwtTokenProvider.createToken(request.getEmail(), role);
             }
-            Map<Object, Object> response = new HashMap<>();
-            response.put("email", request.getEmail());
-            response.put("token", token);
-            return ResponseEntity.ok(response);
+            UserLoggedInDto resultDto;
+            if (Objects.nonNull(student)) {
+                resultDto = conversionService.convert(student, UserLoggedInDto.class);
+            } else {
+                resultDto = conversionService.convert(worker, UserLoggedInDto.class);
+            }
+            resultDto.setToken(token);
+            resultDto.setRole(role);
+            return new ResponseEntity<>(resultDto, HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return new ResponseEntity<>("Invalid email/password combination", HttpStatus.FORBIDDEN);
+            // TODO: 05.03.2023 Add forbidden exc
+            throw new NotFoundException("Forbidden");
         }
     }
 

@@ -63,6 +63,15 @@ public class StudentService implements IStudentService {
     }
 
     @Override
+    public Student findByEmail(String email) {
+        Student student = studentRepository.findByEmail(email);
+        if (Objects.nonNull(student)) {
+            return student;
+        }
+        return null;
+    }
+
+    @Override
     public StudentGroupDto getStudentGroupByStudentId(Long id) {
         Student student = findStudentById(id);
         StudentGroup studentGroup = student.getStudentGroup();

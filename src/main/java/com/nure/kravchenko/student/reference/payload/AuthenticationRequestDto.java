@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotEmpty;
 
 @Data
-public class AuthenticationRequestDTO {
+public class AuthenticationRequestDto {
     @NotEmpty(message = "The email can't be empty")
     private String email;
 

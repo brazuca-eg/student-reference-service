@@ -3,6 +3,7 @@ package com.nure.kravchenko.student.reference.service;
 import com.nure.kravchenko.student.reference.dto.FacultyDto;
 import com.nure.kravchenko.student.reference.dto.WorkerDto;
 import com.nure.kravchenko.student.reference.entity.Faculty;
+import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.Worker;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.RegistrationDto;
@@ -33,6 +34,14 @@ public class WorkerService {
             return optionalWorker.get();
         }
         throw new NotFoundException("There are problems with worker id");
+    }
+
+    public Worker findByEmail(String email) {
+        Worker worker = workerRepository.findByEmail(email);
+        if (Objects.nonNull(worker)) {
+            return worker;
+        }
+        return null;
     }
 
     public WorkerDto getWorkerDtoById(Long id) {
