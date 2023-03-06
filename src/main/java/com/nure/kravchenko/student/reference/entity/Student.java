@@ -27,8 +27,8 @@ public class Student {
     private String surname;
     @Column(length = 128)
     private String fatherhood;
-    @Column(length = 1)
-    private Character gender;
+    @Column
+    private char gender;
     @Column
     private boolean approved;
 

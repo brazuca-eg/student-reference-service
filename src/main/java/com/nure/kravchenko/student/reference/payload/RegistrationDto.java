@@ -22,8 +22,8 @@ public class RegistrationDto {
     @NotEmpty(message = "The fatherhood can't be empty")
     private String fatherhood;
 
-    @NotEmpty(message = "The gender can't be empty")
-    private Character gender;
+    //@NotEmpty(message = "The gender can't be empty")
+    private char gender;
 
     @NotEmpty(message = "The email can't be empty")
     private String email;

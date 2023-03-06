@@ -40,8 +40,8 @@ public class Worker {
     @Column
     private String jobTitle;
 
-    @Column(length = 1)
-    private Character gender;
+    @Column
+    private char gender;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "faculty_id")

@@ -1,4 +1,4 @@
-package com.nure.kravchenko.student.reference.converter.reason;
+package com.nure.kravchenko.student.reference.converter.request;
 
 import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.entity.Reason;

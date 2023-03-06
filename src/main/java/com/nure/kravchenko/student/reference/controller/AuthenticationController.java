@@ -107,13 +107,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid RegistrationDto registrationDto) {
+    public ResponseEntity<Boolean> register(@RequestBody @Valid RegistrationDto registrationDto) {
         if (StringUtils.equalsIgnoreCase(Role.WORKER.name(), registrationDto.getRole())) {
             WorkerDto workerDto = workerService.create(registrationDto);
-            return new ResponseEntity<>(workerDto, HttpStatus.CREATED);
+            return new ResponseEntity<>(Objects.nonNull(workerDto), HttpStatus.CREATED);
         } else if (StringUtils.equalsIgnoreCase(Role.STUDENT.name(), registrationDto.getRole())) {
             StudentDto studentDto = studentService.create(registrationDto);
-            return new ResponseEntity<>(studentDto, HttpStatus.CREATED);
+            return new ResponseEntity<>(Objects.nonNull(studentDto), HttpStatus.CREATED);
         }
         throw new NotFoundException("There are problems with provided role for registration");
     }
