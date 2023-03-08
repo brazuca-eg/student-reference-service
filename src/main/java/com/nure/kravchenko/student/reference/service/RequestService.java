@@ -1,13 +1,15 @@
 package com.nure.kravchenko.student.reference.service;
 
+import com.nure.kravchenko.student.reference.dto.ReasonDto;
 import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.entity.*;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
-import com.nure.kravchenko.student.reference.payload.CreateRequestPayload;
+import com.nure.kravchenko.student.reference.payload.CreateRequestDto;
 import com.nure.kravchenko.student.reference.repository.ReasonRepository;
 import com.nure.kravchenko.student.reference.repository.RequestRepository;
 import com.nure.kravchenko.student.reference.service.report.ReportService;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +48,7 @@ public class RequestService implements IRequestService {
     }
 
     @Override
-    public Request createRequest(Student student, CreateRequestPayload requestPayload) {
+    public RequestDto createRequest(Student student, CreateRequestDto requestPayload) {
         if (Objects.nonNull(student) && Objects.nonNull(student.getTicket())) {
             Ticket ticket = student.getTicket();
             if (StringUtils.equalsIgnoreCase(ticket.getNumber(), requestPayload.getNumber()) &&
@@ -57,7 +59,8 @@ public class RequestService implements IRequestService {
                     request.setStudent(student);
                     request.setStartDate(LocalDateTime.now());
                     request.setReason(reason.get());
-                    return requestRepository.save(request);
+                    Request created = requestRepository.save(request);
+                    return conversionService.convert(created, RequestDto.class);
                 } else {
                     throw new NotFoundException("Invalid reason name provided");
                 }

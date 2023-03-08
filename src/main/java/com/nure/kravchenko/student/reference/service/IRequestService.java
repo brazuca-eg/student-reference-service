@@ -4,13 +4,13 @@ import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.Worker;
-import com.nure.kravchenko.student.reference.payload.CreateRequestPayload;
+import com.nure.kravchenko.student.reference.payload.CreateRequestDto;
 
 import java.util.List;
 
 public interface IRequestService {
 
-    Request createRequest(Student student, CreateRequestPayload requestPayload);
+    RequestDto createRequest(Student student, CreateRequestDto requestPayload);
 
     Request findById(Long id);
 

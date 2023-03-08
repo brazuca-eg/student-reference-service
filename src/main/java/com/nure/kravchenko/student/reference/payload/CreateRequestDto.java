@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateRequestPayload {
+public class CreateRequestDto {
 
     @NotEmpty(message = "Serial number of the ticket can't be empty")
     @Size(min = 2, max = 2)

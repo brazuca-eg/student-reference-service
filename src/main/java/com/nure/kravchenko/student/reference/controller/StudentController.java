@@ -1,12 +1,11 @@
 package com.nure.kravchenko.student.reference.controller;
 
 import com.nure.kravchenko.student.reference.dto.ReasonDto;
+import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.dto.StudentDto;
 import com.nure.kravchenko.student.reference.dto.StudentGroupDto;
-import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Student;
-import com.nure.kravchenko.student.reference.payload.CreateRequestPayload;
-import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
+import com.nure.kravchenko.student.reference.payload.CreateRequestDto;
 import com.nure.kravchenko.student.reference.service.IRequestService;
 import com.nure.kravchenko.student.reference.service.IStudentService;
 import com.nure.kravchenko.student.reference.service.ReasonService;
@@ -36,23 +35,22 @@ public class StudentController {
         this.reasonService = reasonService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<StudentDto> login(@RequestBody @Valid StudentLoginPayload loginPayload) {
-        StudentDto studentDto = studentService.checkLogin(loginPayload);
-        return new ResponseEntity<>(studentDto, HttpStatus.OK);
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
-        return new ResponseEntity<>(studentService.findStudentById(id), HttpStatus.OK);
+    public ResponseEntity<StudentDto> getStudentById(@PathVariable Long id) {
+        Student student = studentService.findStudentById(id);
+        return new ResponseEntity<>(studentService.getStudentDto(student), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/request")
-    public ResponseEntity<Request> createRequest(@PathVariable Long id,
-                                                 @Valid @RequestBody CreateRequestPayload requestPayload) {
+    @PostMapping("/{id}/requests")
+    public ResponseEntity<RequestDto> createRequest(@PathVariable Long id,
+                                                    @Valid @RequestBody CreateRequestDto createRequestDto) {
         Student student = studentService.findStudentById(id);
-        Request createdRequest = requestService.createRequest(student, requestPayload);
-        return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
+        return new ResponseEntity<>(requestService.createRequest(student, createRequestDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/requests")
+    public ResponseEntity<List<RequestDto>> getRequestForStudent(@PathVariable Long id) {
+        return new ResponseEntity<>(studentService.getStudentRequests(id), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/group")

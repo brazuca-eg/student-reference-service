@@ -19,4 +19,10 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "WHERE r.end_date IS NULL AND speciality_id = ?1", nativeQuery = true)
     List<Request> getWaitingRequestsForFaculty(Long facultyId);
 
+
+    @Query(value = "SELECT * FROM request r \n" +
+            "INNER JOIN student s ON r.student_id = s.id\n" +
+            "WHERE r.student_id = ?1", nativeQuery = true)
+    List<Request> getRequestByUserId(Long id);
+
 }
