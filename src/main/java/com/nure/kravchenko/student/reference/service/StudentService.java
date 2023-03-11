@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -100,9 +101,13 @@ public class StudentService implements IStudentService {
     }
 
     @Override
-    public List<RequestDto> getStudentRequests(Long id) {
+    public List<RequestDto> getStudentRequests(Long id, String requestFilter) {
         Student student = findStudentById(id);
         List<Request> requests = student.getRequests();
+
+        if(requestFilter.equalsIgnoreCase("reasonName")){
+            requests.sort(Comparator.comparing(r -> r.getReason().getName()));
+        }
 
         return requests.stream()
                 .map(request -> conversionService.convert(request, RequestDto.class))

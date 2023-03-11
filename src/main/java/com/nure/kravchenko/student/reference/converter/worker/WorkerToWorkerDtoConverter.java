@@ -15,6 +15,7 @@ public class WorkerToWorkerDtoConverter  implements Converter<Worker, WorkerDto>
                 .fatherhood(worker.getFatherhood())
                 .email(worker.getEmail())
                 .isAdmin(worker.isAdmin())
+                .approved(worker.isApproved())
                 .jobTitle(worker.getJobTitle())
                 .gender(worker.getGender())
                 .build();

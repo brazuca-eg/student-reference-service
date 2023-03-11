@@ -85,14 +85,14 @@ public class RequestService implements IRequestService {
 
     @Override
     @Transactional
-    public Request approveRequest(Worker worker, Request request, Boolean approved) {
+    public RequestDto approveRequest(Worker worker, Request request, Boolean approved) {
         if (approved) {
             request.setWorker(worker);
             request.setEndDate(LocalDateTime.now());
             Request savedRequest = requestRepository.save(request);
             try {
-                reportService.generatePdfFromHtml(savedRequest);
-                return savedRequest;
+                //reportService.generatePdfFromHtml(savedRequest);
+                return conversionService.convert(savedRequest, RequestDto.class);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -102,7 +102,7 @@ public class RequestService implements IRequestService {
         } else {
             request.setWorker(worker);
             request.setEndDate(LocalDateTime.now());
-            //denied solution
+            // TODO: 09.03.2023  create denied solution
             return null;
         }
     }

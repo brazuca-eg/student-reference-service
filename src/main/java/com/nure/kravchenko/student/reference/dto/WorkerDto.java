@@ -14,8 +14,6 @@ public class WorkerDto {
 
     private String email;
 
-    private String password;
-
     private String name;
 
     private String surname;
@@ -23,6 +21,8 @@ public class WorkerDto {
     private String fatherhood;
 
     private boolean isAdmin;
+
+    private boolean approved;
 
     private String jobTitle;
 

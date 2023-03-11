@@ -51,4 +51,9 @@ public class Worker {
     @OneToMany(mappedBy = "worker")
     @JsonManagedReference
     private List<Request> requests;
+
+    public void setFaculty(Faculty faculty) {
+        faculty.getWorkers().add(this);
+        this.faculty = faculty;
+    }
 }

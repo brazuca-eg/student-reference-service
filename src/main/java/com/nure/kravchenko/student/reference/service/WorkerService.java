@@ -3,17 +3,20 @@ package com.nure.kravchenko.student.reference.service;
 import com.nure.kravchenko.student.reference.dto.FacultyDto;
 import com.nure.kravchenko.student.reference.dto.WorkerDto;
 import com.nure.kravchenko.student.reference.entity.Faculty;
-import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.Worker;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.RegistrationDto;
+import com.nure.kravchenko.student.reference.payload.admin.ApproveWorkerDto;
 import com.nure.kravchenko.student.reference.repository.WorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkerService {
@@ -49,6 +52,22 @@ public class WorkerService {
         return conversionService.convert(worker, WorkerDto.class);
     }
 
+    public List<WorkerDto> getWaitingApproveWorkers() {
+        List<Worker> workers = workerRepository.findWaitingApprovalWorkers();
+        return  workers.stream()
+                .map(worker -> conversionService.convert(worker, WorkerDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public WorkerDto approveWorker(Long id, ApproveWorkerDto approveWorkerDto, Faculty faculty) {
+        Worker worker = findWorkerById(id);
+        worker.setJobTitle(approveWorkerDto.getJobTitle());
+        worker.setFaculty(faculty);
+        worker.setApproved(true);
+        Worker updated = save(worker);
+        return conversionService.convert(updated, WorkerDto.class);
+    }
+
     public FacultyDto getWorkerFaculty(Long id) {
         Worker worker = findWorkerById(id);
         Faculty faculty = worker.getFaculty();
@@ -65,6 +84,10 @@ public class WorkerService {
         Worker created = workerRepository.save(worker);
 
         return conversionService.convert(created, WorkerDto.class);
+    }
+
+    public Worker save(Worker worker) {
+        return workerRepository.save(worker);
     }
 
 }

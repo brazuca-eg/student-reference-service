@@ -49,8 +49,8 @@ public class StudentController {
     }
 
     @GetMapping("/{id}/requests")
-    public ResponseEntity<List<RequestDto>> getRequestForStudent(@PathVariable Long id) {
-        return new ResponseEntity<>(studentService.getStudentRequests(id), HttpStatus.CREATED);
+    public ResponseEntity<List<RequestDto>> getRequestForStudent(@PathVariable Long id, @RequestParam String filter) {
+        return new ResponseEntity<>(studentService.getStudentRequests(id,filter), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/group")

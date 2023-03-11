@@ -56,8 +56,8 @@ public class WorkerController {
         return new ResponseEntity<>(requestService.findWaitingRequest(workerService.findWorkerById(id)), HttpStatus.OK);
     }
 
-    @PostMapping("/{workerId}/requests/{requestId}/approve")
-    public ResponseEntity<Request> approveRequest(@PathVariable Long workerId, @PathVariable Long requestId,
+    @PostMapping("/{workerId}/requests/{requestId}")
+    public ResponseEntity<RequestDto> approveRequest(@PathVariable Long workerId, @PathVariable Long requestId,
                                                   @RequestParam Boolean approve) {
         Worker worker = workerService.findWorkerById(workerId);
         Request request = requestService.findById(requestId);

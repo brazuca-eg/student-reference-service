@@ -1,10 +1,11 @@
 package com.nure.kravchenko.student.reference.controller;
 
-import com.nure.kravchenko.student.reference.entity.Reason;
-import com.nure.kravchenko.student.reference.entity.Student;
-import com.nure.kravchenko.student.reference.entity.StudentGroup;
-import com.nure.kravchenko.student.reference.entity.Ticket;
+import com.nure.kravchenko.student.reference.dto.FacultyDto;
+import com.nure.kravchenko.student.reference.dto.WorkerDto;
+import com.nure.kravchenko.student.reference.entity.*;
+import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.admin.ApproveStudentRegisterPayload;
+import com.nure.kravchenko.student.reference.payload.admin.ApproveWorkerDto;
 import com.nure.kravchenko.student.reference.payload.admin.CreateReasonPayload;
 import com.nure.kravchenko.student.reference.payload.admin.CreateTicketRequest;
 import com.nure.kravchenko.student.reference.service.*;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -23,19 +25,44 @@ public class AdminController {
 
     private final IRequestService requestService;
 
+    private final WorkerService workerService;
+
+    private final FacultyService facultyService;
+
     private final ReasonService reasonService;
 
     private final StudentGroupService studentGroupService;
 
     private final TicketService ticketService;
 
-    public AdminController(IStudentService studentService, IRequestService requestService, ReasonService reasonService,
+    public AdminController(IStudentService studentService, IRequestService requestService, WorkerService workerService, FacultyService facultyService, ReasonService reasonService,
                            StudentGroupService studentGroupService, TicketService ticketService) {
         this.studentService = studentService;
         this.requestService = requestService;
+        this.workerService = workerService;
+        this.facultyService = facultyService;
         this.reasonService = reasonService;
         this.studentGroupService = studentGroupService;
         this.ticketService = ticketService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<WorkerDto> getAdminById(@PathVariable Long id) {
+        WorkerDto workerDto = workerService.getWorkerDtoById(id);
+        if (workerDto.isAdmin()) {
+            return new ResponseEntity<>(workerDto, HttpStatus.OK);
+        }
+        throw new NotFoundException("This is not admin");
+    }
+
+    @GetMapping("/approve/workers")
+    public ResponseEntity<List<WorkerDto>> getWaitingApproveWorkers() {
+        return new ResponseEntity<>(workerService.getWaitingApproveWorkers(), HttpStatus.OK);
+    }
+
+    @GetMapping("/faculties")
+    public ResponseEntity<List<FacultyDto>> getAllFaculties() {
+        return new ResponseEntity<>(facultyService.getAllFaculties(), HttpStatus.OK);
     }
 
     @PostMapping("/students/{studentId}/approve")
@@ -49,6 +76,17 @@ public class AdminController {
 
         return student;
     }
+
+    @PostMapping("/workers/{workerId}/approve")
+    public ResponseEntity<WorkerDto> approveWorkerRegistration(@PathVariable Long workerId,
+                                               @RequestBody @Valid ApproveWorkerDto approveWorkerDto) {
+
+        Faculty faculty = facultyService.findById(approveWorkerDto.getFacultyId());
+        WorkerDto workerDto = workerService.approveWorker(workerId, approveWorkerDto, faculty);
+
+        return new ResponseEntity<>(workerDto, HttpStatus.CREATED);
+    }
+
 
     @PostMapping("/students/{studentId}/ticket")
     public ResponseEntity<Ticket> addTicket(@PathVariable Long studentId,

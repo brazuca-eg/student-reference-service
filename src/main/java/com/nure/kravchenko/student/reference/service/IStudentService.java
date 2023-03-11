@@ -25,6 +25,6 @@ public interface IStudentService {
 
     Student findByEmail(String email);
 
-    List<RequestDto> getStudentRequests(Long id);
+    List<RequestDto> getStudentRequests(Long id,String requestFilter);
 
 }
