@@ -4,8 +4,8 @@ import com.lowagie.text.pdf.BaseFont;
 import com.nure.kravchenko.student.reference.dto.ReportInformation;
 import com.nure.kravchenko.student.reference.entity.*;
 import com.nure.kravchenko.student.reference.service.s3.StorageService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -17,9 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import java.util.Objects;
 
 @Service
 public class ReportService {
@@ -46,11 +44,14 @@ public class ReportService {
 
     private static final String REPORT_DATE = "reportDate";
 
-    @Autowired
     private final StorageService storageService;
 
-    public ReportService(StorageService storageService) {
+    private final ConversionService conversionService;
+
+    @Autowired
+    public ReportService(StorageService storageService, ConversionService conversionService) {
         this.storageService = storageService;
+        this.conversionService = conversionService;
     }
 
     private String parseThymeleafTemplate(ReportInformation reportInformation) {
@@ -70,6 +71,7 @@ public class ReportService {
         context.setVariable(LEARN_FORM, reportInformation.getLearnForm());
         context.setVariable(FACULTY, reportInformation.getFaculty());
         context.setVariable(DEGREE_FORM, reportInformation.getDegreeForm());
+        context.setVariable(REASON, reportInformation.getReason());
         context.setVariable(START_DATE, reportInformation.getStartDate());
         context.setVariable(END_DATE, reportInformation.getEndDate());
         context.setVariable(REPORT_DATE, reportInformation.getReportDate());
@@ -78,39 +80,9 @@ public class ReportService {
     }
 
     public void generatePdfFromHtml(Request request) throws Exception {
-        ReportInformation reportInformation = new ReportInformation();
         Student student = request.getStudent();
         if (student.isApproved()) {
-            // TODO: 25.02.2023 Implement Converter
-            reportInformation.setFullName(student.getName() + " " + student.getSurname() + " " + student.getFatherhood());
-            Character gender = student.getGender();
-            if (Objects.nonNull(gender) && gender == 'M') {
-                reportInformation.setGender("він");
-                reportInformation.setStudentGender("студентом");
-            } else {
-                reportInformation.setGender("вона");
-                reportInformation.setStudentGender("студенткою");
-            }
-
-            StudentGroup studentGroup = student.getStudentGroup();
-            reportInformation.setCourseNumber(String
-                    .valueOf(studentGroup.getEndYear().getYear() - studentGroup.getEndYear().getYear()));
-            String learnForm = studentGroup.getLearnForm();
-            if (StringUtils.equalsIgnoreCase("Денна", learnForm)) {
-                reportInformation.setLearnForm("денної");
-            } else {
-                reportInformation.setLearnForm("заочної");
-            }
-            reportInformation.setDegreeForm(studentGroup.getDegreeForm());
-            reportInformation.setStartDate(studentGroup.getStartYear().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            reportInformation.setEndDate(studentGroup.getEndYear().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            reportInformation.setReportDate(request.getEndDate()
-                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-
-            Speciality speciality = studentGroup.getSpeciality();
-            Faculty faculty = speciality.getFaculty();
-            reportInformation.setFaculty(faculty.getName());
-
+            ReportInformation reportInformation = conversionService.convert(request, ReportInformation.class);
 
             LocalDate currentDate = LocalDate.now();
             String reportName = student.getName() + "_" + student.getSurname() + "_" + currentDate + ".pdf";
@@ -129,8 +101,6 @@ public class ReportService {
 
             outputStream.close();
         }
-
-
         //S3
 //        File file =  new File("D:\\Java\\Diploma\\Backend\\student-reference-service\\src\\main\\resources\\reports\\Аліна_Мільник_2023-02-21.pdf");
 //        if(file.exists()){
