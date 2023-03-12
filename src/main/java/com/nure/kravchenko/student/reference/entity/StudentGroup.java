@@ -43,4 +43,9 @@ public class StudentGroup {
     @JsonBackReference
     private Speciality speciality;
 
+    public void setSpeciality(Speciality speciality) {
+        speciality.getStudentGroups().add(this);
+        this.speciality = speciality;
+    }
+
 }

@@ -4,8 +4,11 @@ import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.dto.StudentDto;
 import com.nure.kravchenko.student.reference.dto.StudentGroupDto;
 import com.nure.kravchenko.student.reference.entity.Student;
+import com.nure.kravchenko.student.reference.entity.StudentGroup;
+import com.nure.kravchenko.student.reference.entity.Ticket;
 import com.nure.kravchenko.student.reference.payload.RegistrationDto;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
+import com.nure.kravchenko.student.reference.payload.admin.ApproveStudentRegisterDto;
 
 import java.util.List;
 
@@ -26,5 +29,9 @@ public interface IStudentService {
     Student findByEmail(String email);
 
     List<RequestDto> getStudentRequests(Long id,String requestFilter);
+
+    List<StudentDto> getWaitingApproveStudents();
+
+    StudentDto approveStudentRegistration(Student student, StudentGroup studentGroup, Ticket ticket );
 
 }

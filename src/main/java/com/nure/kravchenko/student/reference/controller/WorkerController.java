@@ -25,7 +25,6 @@ public class WorkerController {
 
     private final WorkerService workerService;
 
-
     @Autowired
     public WorkerController(IStudentService studentService, IRequestService requestService, WorkerService workerService) {
         this.studentService = studentService;

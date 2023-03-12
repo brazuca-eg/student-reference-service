@@ -3,16 +3,17 @@ package com.nure.kravchenko.student.reference.service;
 import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.dto.StudentDto;
 import com.nure.kravchenko.student.reference.dto.StudentGroupDto;
-import com.nure.kravchenko.student.reference.entity.Request;
-import com.nure.kravchenko.student.reference.entity.Student;
-import com.nure.kravchenko.student.reference.entity.StudentGroup;
+import com.nure.kravchenko.student.reference.dto.WorkerDto;
+import com.nure.kravchenko.student.reference.entity.*;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.RegistrationDto;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
+import com.nure.kravchenko.student.reference.payload.admin.ApproveStudentRegisterDto;
 import com.nure.kravchenko.student.reference.repository.RequestRepository;
 import com.nure.kravchenko.student.reference.repository.StudentRepository;
 import com.nure.kravchenko.student.reference.service.report.ReportService;
 import com.nure.kravchenko.student.reference.service.utils.ValidationUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -112,6 +113,26 @@ public class StudentService implements IStudentService {
         return requests.stream()
                 .map(request -> conversionService.convert(request, RequestDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudentDto> getWaitingApproveStudents() {
+        List<Student> students = studentRepository.findWaitingApprovalStudents();
+        return students.stream()
+                .map(student -> conversionService.convert(student, StudentDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public StudentDto approveStudentRegistration(Student student, StudentGroup studentGroup, Ticket ticket) {
+        if(!student.isApproved()){
+            student.setStudentGroup(studentGroup);
+            student.setTicket(ticket);
+            student.setApproved(true);
+            Student updated = save(student);
+            return conversionService.convert(updated, StudentDto.class);
+        }
+        throw new NotFoundException("The user is already approved");
     }
 
     public Student save(Student student) {

@@ -39,4 +39,12 @@ public class TicketService {
         return conversionService.convert(createTicketRequest, Ticket.class);
     }
 
+    public boolean checkExisting(String serialNumber, String number) {
+        Optional<Ticket> ticketOptional = ticketRepository.findBySerialNumberAndNumber(serialNumber, number);
+        if(ticketOptional.isPresent()){
+            return true;
+        }
+        return false;
+    }
+
 }

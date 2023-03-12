@@ -1,15 +1,14 @@
 package com.nure.kravchenko.student.reference.service;
 
-import com.nure.kravchenko.student.reference.dto.ReasonDto;
 import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.entity.*;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.CreateRequestDto;
 import com.nure.kravchenko.student.reference.repository.ReasonRepository;
 import com.nure.kravchenko.student.reference.repository.RequestRepository;
+import com.nure.kravchenko.student.reference.service.report.EmailSenderService;
 import com.nure.kravchenko.student.reference.service.report.ReportService;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +28,15 @@ public class RequestService implements IRequestService {
 
     private final ReportService reportService;
 
+    private final EmailSenderService emailSenderService;
+
     private final ConversionService conversionService;
 
-    public RequestService(RequestRepository requestRepository, ReasonRepository reasonRepository, ReportService reportService, ConversionService conversionService) {
+    public RequestService(RequestRepository requestRepository, ReasonRepository reasonRepository, ReportService reportService, EmailSenderService emailSenderService, ConversionService conversionService) {
         this.requestRepository = requestRepository;
         this.reasonRepository = reasonRepository;
         this.reportService = reportService;
+        this.emailSenderService = emailSenderService;
         this.conversionService = conversionService;
     }
 
@@ -91,6 +93,10 @@ public class RequestService implements IRequestService {
             request.setEndDate(LocalDateTime.now());
             Request savedRequest = requestRepository.save(request);
             try {
+                emailSenderService.sendMailWithAttachment("yehor.kravchenko@nure.ua",
+                        request.getReason().getDescription(), request.getReason().getDescription(),
+                        "D:\\Java\\Diploma\\Backend\\student-reference-service\\src\\main\\resources\\reports\\dev_notes.pdf");
+
                 //reportService.generatePdfFromHtml(savedRequest);
                 return conversionService.convert(savedRequest, RequestDto.class);
             } catch (Exception e) {

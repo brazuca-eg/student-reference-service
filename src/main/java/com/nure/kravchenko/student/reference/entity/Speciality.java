@@ -35,4 +35,10 @@ public class Speciality {
     @JoinColumn(name = "faculty_id")
     @JsonBackReference
     private Faculty faculty;
+
+    public void setFaculty(Faculty faculty) {
+        faculty.getSpecialities().add(this);
+        this.faculty = faculty;
+    }
+
 }

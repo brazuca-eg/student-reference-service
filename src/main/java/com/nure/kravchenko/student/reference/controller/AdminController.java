@@ -1,13 +1,9 @@
 package com.nure.kravchenko.student.reference.controller;
 
-import com.nure.kravchenko.student.reference.dto.FacultyDto;
-import com.nure.kravchenko.student.reference.dto.WorkerDto;
+import com.nure.kravchenko.student.reference.dto.*;
 import com.nure.kravchenko.student.reference.entity.*;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
-import com.nure.kravchenko.student.reference.payload.admin.ApproveStudentRegisterPayload;
-import com.nure.kravchenko.student.reference.payload.admin.ApproveWorkerDto;
-import com.nure.kravchenko.student.reference.payload.admin.CreateReasonPayload;
-import com.nure.kravchenko.student.reference.payload.admin.CreateTicketRequest;
+import com.nure.kravchenko.student.reference.payload.admin.*;
 import com.nure.kravchenko.student.reference.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +31,10 @@ public class AdminController {
 
     private final TicketService ticketService;
 
+    private final SpecialityService specialityService;
+
     public AdminController(IStudentService studentService, IRequestService requestService, WorkerService workerService, FacultyService facultyService, ReasonService reasonService,
-                           StudentGroupService studentGroupService, TicketService ticketService) {
+                           StudentGroupService studentGroupService, TicketService ticketService, SpecialityService specialityService) {
         this.studentService = studentService;
         this.requestService = requestService;
         this.workerService = workerService;
@@ -44,6 +42,7 @@ public class AdminController {
         this.reasonService = reasonService;
         this.studentGroupService = studentGroupService;
         this.ticketService = ticketService;
+        this.specialityService = specialityService;
     }
 
     @GetMapping("/{id}")
@@ -55,9 +54,19 @@ public class AdminController {
         throw new NotFoundException("This is not admin");
     }
 
+    @GetMapping("/students/{id}")
+    public ResponseEntity<StudentDto> getStudentById(@PathVariable Long id) {
+        return new ResponseEntity<>(studentService.getStudentDto(studentService.findStudentById(id)), HttpStatus.OK);
+    }
+
     @GetMapping("/approve/workers")
     public ResponseEntity<List<WorkerDto>> getWaitingApproveWorkers() {
         return new ResponseEntity<>(workerService.getWaitingApproveWorkers(), HttpStatus.OK);
+    }
+
+    @GetMapping("/approve/students")
+    public ResponseEntity<List<StudentDto>> getWaitingApproveStudents() {
+        return new ResponseEntity<>(studentService.getWaitingApproveStudents(), HttpStatus.OK);
     }
 
     @GetMapping("/faculties")
@@ -65,21 +74,38 @@ public class AdminController {
         return new ResponseEntity<>(facultyService.getAllFaculties(), HttpStatus.OK);
     }
 
+    @GetMapping("/specialities")
+    public ResponseEntity<List<SpecialityDto>> getAllSpecialities() {
+        return new ResponseEntity<>(specialityService.findAll(), HttpStatus.OK);
+    }
+
     @PostMapping("/students/{studentId}/approve")
-    public Student approveStudentRegistration(
+    public ResponseEntity<StudentDto> approveStudentRegistration(
             @PathVariable Long studentId,
-            @RequestBody @Valid ApproveStudentRegisterPayload approveStudentRegisterPayload) {
+            @RequestBody @Valid ApproveStudentRegisterDto approveStudentRegisterDto) {
         Student student = studentService.findStudentById(studentId);
-        StudentGroup studentGroup = studentGroupService.findGroupByName(approveStudentRegisterPayload.getGroupName());
+        StudentGroup studentGroup = studentGroupService.findGroupByName(approveStudentRegisterDto.getGroupName());
 
-        student.setStudentGroup(studentGroup);
-
-        return student;
+        String serialNumber = approveStudentRegisterDto.getSerialNumber();
+        String number = approveStudentRegisterDto.getNumber();
+        boolean existing = ticketService.checkExisting(serialNumber, number);
+        if (existing) {
+            throw new RuntimeException("The ticket already exists");
+        } else {
+            Ticket ticket = Ticket.builder()
+                    .number(number)
+                    .serialNumber(serialNumber)
+                    .startDate(approveStudentRegisterDto.getStartDate())
+                    .endDate(approveStudentRegisterDto.getEndDate())
+                    .build();
+            return new ResponseEntity<>(studentService.approveStudentRegistration(student, studentGroup, ticket),
+                    HttpStatus.OK);
+        }
     }
 
     @PostMapping("/workers/{workerId}/approve")
     public ResponseEntity<WorkerDto> approveWorkerRegistration(@PathVariable Long workerId,
-                                               @RequestBody @Valid ApproveWorkerDto approveWorkerDto) {
+                                                               @RequestBody @Valid ApproveWorkerDto approveWorkerDto) {
 
         Faculty faculty = facultyService.findById(approveWorkerDto.getFacultyId());
         WorkerDto workerDto = workerService.approveWorker(workerId, approveWorkerDto, faculty);
@@ -112,6 +138,23 @@ public class AdminController {
         reasonService.save(reason);
 
         return new ResponseEntity<>(reason, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/faculty")
+    public ResponseEntity<FacultyDto> createFaculty(@RequestBody @Valid CreateFacultyDto createFacultyDto) {
+        return new ResponseEntity<>(facultyService.createFaculty(createFacultyDto), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/speciality")
+    public ResponseEntity<SpecialityDto> createSpeciality(@RequestBody @Valid CreateSpecialityDto createSpecialityDto) {
+        Faculty faculty = facultyService.findById(createSpecialityDto.getFacultyId());
+        return new ResponseEntity<>(specialityService.createSpeciality(createSpecialityDto, faculty), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/group")
+    public ResponseEntity<StudentGroupDto> createGroup(@RequestBody @Valid CreateGroupDto createGroupDto) {
+        Speciality speciality = specialityService.findById(createGroupDto.getSpecialityId());
+        return new ResponseEntity<>(studentGroupService.createGroup(createGroupDto, speciality), HttpStatus.CREATED);
     }
 
 }
