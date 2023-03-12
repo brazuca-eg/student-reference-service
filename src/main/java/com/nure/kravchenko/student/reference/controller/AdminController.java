@@ -113,22 +113,6 @@ public class AdminController {
         return new ResponseEntity<>(workerDto, HttpStatus.CREATED);
     }
 
-
-    @PostMapping("/students/{studentId}/ticket")
-    public ResponseEntity<Ticket> addTicket(@PathVariable Long studentId,
-                                            @Valid @RequestBody CreateTicketRequest ticketRequest) throws Exception {
-        Student student = studentService.findStudentById(studentId);
-        if (Objects.nonNull(student.getTicket())) {
-            throw new Exception("The student has already have a ticket");
-        }
-        Ticket newTicket = ticketService.createTicketFromAdminRequest(ticketRequest);
-        student.setTicket(newTicket);
-        studentService.save(student);
-
-        // TODO: 28.02.2023 "id": null in response for ticket
-        return new ResponseEntity<>(newTicket, HttpStatus.CREATED);
-    }
-
     @PostMapping("/reason")
     public ResponseEntity<Reason> createReason(@RequestBody @Valid CreateReasonPayload reasonPayload) {
         Reason reason = Reason.builder()
