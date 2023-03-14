@@ -5,6 +5,7 @@ import com.nure.kravchenko.student.reference.entity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.converter.Converter;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class RequestToReportInformationConverter implements Converter<Request, ReportInformation> {
@@ -25,7 +26,7 @@ public class RequestToReportInformationConverter implements Converter<Request, R
         reportInformation.setReason(request.getReason().getName());
         StudentGroup studentGroup = student.getStudentGroup();
         reportInformation.setCourseNumber(String
-                .valueOf(studentGroup.getEndYear().getYear() - studentGroup.getEndYear().getYear()));
+                .valueOf(LocalDateTime.now().getYear() - studentGroup.getStartYear().getYear()));
         String learnForm = studentGroup.getLearnForm();
         if (StringUtils.equalsIgnoreCase("Денна", learnForm)) {
             reportInformation.setLearnForm("денної");

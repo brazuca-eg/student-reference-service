@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.util.Objects;
 
 @Service
 public class EmailSenderService {
@@ -34,7 +35,7 @@ public class EmailSenderService {
         mimeMessageHelper.setSubject(subject);
 
         FileSystemResource fileSystemResource = new FileSystemResource(new File(attachmentPath));
-        mimeMessageHelper.addAttachment(fileSystemResource.getFilename(),
+        mimeMessageHelper.addAttachment(Objects.requireNonNull(fileSystemResource.getFilename()),
                 fileSystemResource);
         javaMailSender.send(mimeMessage);
     }
