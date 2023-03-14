@@ -28,15 +28,12 @@ public class RequestService implements IRequestService {
 
     private final ReportService reportService;
 
-    private final EmailSenderService emailSenderService;
-
     private final ConversionService conversionService;
 
     public RequestService(RequestRepository requestRepository, ReasonRepository reasonRepository, ReportService reportService, EmailSenderService emailSenderService, ConversionService conversionService) {
         this.requestRepository = requestRepository;
         this.reasonRepository = reasonRepository;
         this.reportService = reportService;
-        this.emailSenderService = emailSenderService;
         this.conversionService = conversionService;
     }
 
@@ -89,22 +86,16 @@ public class RequestService implements IRequestService {
     @Transactional
     public RequestDto approveRequest(Worker worker, Request request, Boolean approved) {
         if (approved) {
+            //approved solution
             request.setWorker(worker);
             request.setEndDate(LocalDateTime.now());
             Request savedRequest = requestRepository.save(request);
             try {
-                emailSenderService.sendMailWithAttachment("yehor.kravchenko@nure.ua",
-                        request.getReason().getDescription(), request.getReason().getDescription(),
-                        "D:\\Java\\Diploma\\Backend\\student-reference-service\\src\\main\\resources\\reports\\dev_notes.pdf");
-
-                //reportService.generatePdfFromHtml(savedRequest);
+                reportService.generatePdfFromHtml(savedRequest);
                 return conversionService.convert(savedRequest, RequestDto.class);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            //approved solution
-            //mail notification
-            //s3 generate
         } else {
             request.setWorker(worker);
             request.setEndDate(LocalDateTime.now());

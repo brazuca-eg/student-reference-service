@@ -2,7 +2,8 @@ package com.nure.kravchenko.student.reference.service.report;
 
 import com.lowagie.text.pdf.BaseFont;
 import com.nure.kravchenko.student.reference.dto.ReportInformation;
-import com.nure.kravchenko.student.reference.entity.*;
+import com.nure.kravchenko.student.reference.entity.Request;
+import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.service.s3.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
@@ -13,6 +14,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -46,11 +48,14 @@ public class ReportService {
 
     private final StorageService storageService;
 
+    private final EmailSenderService emailSenderService;
+
     private final ConversionService conversionService;
 
     @Autowired
-    public ReportService(StorageService storageService, ConversionService conversionService) {
+    public ReportService(StorageService storageService, EmailSenderService emailSenderService, ConversionService conversionService) {
         this.storageService = storageService;
+        this.emailSenderService = emailSenderService;
         this.conversionService = conversionService;
     }
 
@@ -79,14 +84,16 @@ public class ReportService {
         return templateEngine.process("templates/thymeleaf_template", context);
     }
 
+    @Transactional
     public void generatePdfFromHtml(Request request) throws Exception {
         Student student = request.getStudent();
         if (student.isApproved()) {
             ReportInformation reportInformation = conversionService.convert(request, ReportInformation.class);
-
+            String directory = new File("./").getAbsolutePath();
+            String path = directory.substring(0, directory.length() - 1) + "src\\main\\resources\\reports\\";
             LocalDate currentDate = LocalDate.now();
             String reportName = student.getName() + "_" + student.getSurname() + "_" + currentDate + ".pdf";
-            String outputFolder = "D:\\Java\\Diploma\\Backend\\student-reference-service\\src\\main\\resources\\reports\\" + reportName;
+            String outputFolder = path + reportName;
 
             OutputStream outputStream = new FileOutputStream(outputFolder);
 
@@ -100,11 +107,17 @@ public class ReportService {
             renderer.createPDF(outputStream);
 
             outputStream.close();
+
+            emailSenderService.sendMailWithAttachment("yehor.kravchenko@nure.ua",
+                    request.getReason().getDescription(), request.getReason().getDescription(), outputFolder);
+
+            File created = new File(outputFolder);
+            created.delete();
         }
         //S3
-//        File file =  new File("D:\\Java\\Diploma\\Backend\\student-reference-service\\src\\main\\resources\\reports\\Аліна_Мільник_2023-02-21.pdf");
-//        if(file.exists()){
-//            storageService.uploadFile(file);
-//        }
+        //        File file =  new File("D:\\Java\\Diploma\\Backend\\student-reference-service\\src\\main\\resources\\reports\\Аліна_Мільник_2023-02-21.pdf");
+        //        if(file.exists()){
+        //            storageService.uploadFile(file);
+        //        }
     }
 }
