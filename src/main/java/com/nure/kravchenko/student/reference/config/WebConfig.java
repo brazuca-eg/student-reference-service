@@ -7,6 +7,7 @@ import com.nure.kravchenko.student.reference.converter.group.StudentGroupToStude
 import com.nure.kravchenko.student.reference.converter.reason.ReasonToReasonDtoConverter;
 import com.nure.kravchenko.student.reference.converter.report.RequestToReportInformationConverter;
 import com.nure.kravchenko.student.reference.converter.request.RequestToRequestDtoConverter;
+import com.nure.kravchenko.student.reference.converter.request.RequestToWorkerRequestDtoConverter;
 import com.nure.kravchenko.student.reference.converter.speciality.CreateSpecialityDtoToSpecialityConverter;
 import com.nure.kravchenko.student.reference.converter.speciality.SpecialityToSpecialityDtoConverter;
 import com.nure.kravchenko.student.reference.converter.student.RegistrationDtoToStudentConverter;
@@ -41,6 +42,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addConverter(new CreateSpecialityDtoToSpecialityConverter());
         registry.addConverter(new SpecialityToSpecialityDtoConverter());
         registry.addConverter(new RequestToReportInformationConverter());
+        registry.addConverter(new RequestToWorkerRequestDtoConverter());
     }
 
 }

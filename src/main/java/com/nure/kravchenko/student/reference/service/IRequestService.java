@@ -1,6 +1,7 @@
 package com.nure.kravchenko.student.reference.service;
 
 import com.nure.kravchenko.student.reference.dto.RequestDto;
+import com.nure.kravchenko.student.reference.dto.WorkerRequestDto;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.Worker;
@@ -16,5 +17,5 @@ public interface IRequestService {
 
     RequestDto approveRequest(Worker worker, Request request, Boolean approved);
 
-    List<RequestDto> findWaitingRequest(Worker worker);
+    List<WorkerRequestDto> findWaitingRequest(Worker worker);
 }

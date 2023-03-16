@@ -3,6 +3,7 @@ package com.nure.kravchenko.student.reference.controller;
 import com.nure.kravchenko.student.reference.dto.FacultyDto;
 import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.dto.WorkerDto;
+import com.nure.kravchenko.student.reference.dto.WorkerRequestDto;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Worker;
 import com.nure.kravchenko.student.reference.service.IRequestService;
@@ -51,7 +52,7 @@ public class WorkerController {
     }
 
     @GetMapping("/{id}/requests/nonAssigned")
-    public ResponseEntity<List<RequestDto>> getNonAssignedRequestsByWorkerFaculty(@PathVariable Long id) {
+    public ResponseEntity<List<WorkerRequestDto>> getNonAssignedRequestsByWorkerFaculty(@PathVariable Long id) {
         return new ResponseEntity<>(requestService.findWaitingRequest(workerService.findWorkerById(id)), HttpStatus.OK);
     }
 

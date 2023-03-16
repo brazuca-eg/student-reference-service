@@ -1,6 +1,7 @@
 package com.nure.kravchenko.student.reference.service;
 
 import com.nure.kravchenko.student.reference.dto.RequestDto;
+import com.nure.kravchenko.student.reference.dto.WorkerRequestDto;
 import com.nure.kravchenko.student.reference.entity.*;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.CreateRequestDto;
@@ -71,12 +72,12 @@ public class RequestService implements IRequestService {
     }
 
     @Override
-    public List<RequestDto> findWaitingRequest(Worker worker) {
+    public List<WorkerRequestDto> findWaitingRequest(Worker worker) {
         Faculty faculty = worker.getFaculty();
         if (Objects.nonNull(faculty)) {
             List<Request> requests = requestRepository.getWaitingRequestsForFaculty(faculty.getId());
             return requests.stream()
-                    .map(request -> conversionService.convert(request, RequestDto.class))
+                    .map(request -> conversionService.convert(request, WorkerRequestDto.class))
                     .collect(Collectors.toList());
         }
         throw new NotFoundException("There worker doesn't have a faculty");
