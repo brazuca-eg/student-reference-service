@@ -19,6 +19,7 @@ public class RequestToWorkerRequestDtoConverter implements Converter<Request, Wo
                 .endDate(request.getEndDate())
                 .studentId(student.getId())
                 .studentFullName(fullName)
+                .s3FileName(request.getS3FileName())
                 .groupName(student.getStudentGroup().getName())
                 .reasonName(reason.getName())
                 .reasonDescription(reason.getDescription())

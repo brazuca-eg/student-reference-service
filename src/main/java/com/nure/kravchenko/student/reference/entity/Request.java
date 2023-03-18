@@ -21,6 +21,8 @@ public class Request {
     private LocalDateTime startDate;
     @Column
     private LocalDateTime endDate;
+    @Column
+    private String s3FileName;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "reason_id")

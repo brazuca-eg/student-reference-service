@@ -18,4 +18,6 @@ public interface IRequestService {
     RequestDto approveRequest(Worker worker, Request request, Boolean approved);
 
     List<WorkerRequestDto> findWaitingRequest(Worker worker);
+
+    List<WorkerRequestDto> findAssignedWorkerRequests(Worker worker);
 }

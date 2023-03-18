@@ -23,4 +23,6 @@ public class RequestDto {
 
     private String reasonDescription;
 
+    private String s3FileName;
+
 }

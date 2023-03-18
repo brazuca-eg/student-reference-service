@@ -25,6 +25,8 @@ public class WorkerRequestDto {
 
     private String studentFullName;
 
+    private String s3FileName;
+
     private Long studentId;
 
 }

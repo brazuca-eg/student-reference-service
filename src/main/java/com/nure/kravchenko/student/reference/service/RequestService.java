@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -84,6 +85,15 @@ public class RequestService implements IRequestService {
     }
 
     @Override
+    public List<WorkerRequestDto> findAssignedWorkerRequests(Worker worker) {
+        return worker.getRequests()
+                .stream()
+                .filter(request -> Objects.nonNull(request.getEndDate()))
+                .map(request -> conversionService.convert(request, WorkerRequestDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public RequestDto approveRequest(Worker worker, Request request, Boolean approved) {
         if (approved) {
@@ -92,7 +102,8 @@ public class RequestService implements IRequestService {
             request.setEndDate(LocalDateTime.now());
             Request savedRequest = requestRepository.save(request);
             try {
-                reportService.generatePdfFromHtml(savedRequest);
+                String fileName = reportService.generatePdfFromHtml(savedRequest);
+                request.setS3FileName(fileName);
                 return conversionService.convert(savedRequest, RequestDto.class);
             } catch (Exception e) {
                 throw new RuntimeException(e);

@@ -85,7 +85,7 @@ public class ReportService {
     }
 
     @Transactional
-    public void generatePdfFromHtml(Request request) throws Exception {
+    public String generatePdfFromHtml(Request request) throws Exception {
         Student student = request.getStudent();
         if (student.isApproved()) {
             ReportInformation reportInformation = conversionService.convert(request, ReportInformation.class);
@@ -112,12 +112,11 @@ public class ReportService {
                     request.getReason().getDescription(), request.getReason().getDescription(), outputFolder);
 
             File created = new File(outputFolder);
+            storageService.uploadFile(created);
+            String fileName = created.getName();
             created.delete();
+            return fileName;
         }
-        //S3
-        //        File file =  new File("D:\\Java\\Diploma\\Backend\\student-reference-service\\src\\main\\resources\\reports\\Аліна_Мільник_2023-02-21.pdf");
-        //        if(file.exists()){
-        //            storageService.uploadFile(file);
-        //        }
+        throw new RuntimeException("Student not approved exception");
     }
 }
