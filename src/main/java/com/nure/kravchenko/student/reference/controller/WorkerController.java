@@ -75,11 +75,11 @@ public class WorkerController {
 
     @PostMapping("/{workerId}/requests/{requestId}")
     public ResponseEntity<RequestDto> approveRequest(@PathVariable Long workerId, @PathVariable Long requestId,
-                                                     @RequestParam Boolean approve) {
+                                                     @RequestParam Boolean approve, @RequestParam String comment) {
         Worker worker = workerService.findWorkerById(workerId);
         Request request = requestService.findById(requestId);
 
-        return new ResponseEntity<>(requestService.approveRequest(worker, request, approve), HttpStatus.OK);
+        return new ResponseEntity<>(requestService.approveRequest(worker, request, approve, comment), HttpStatus.OK);
     }
 
 }

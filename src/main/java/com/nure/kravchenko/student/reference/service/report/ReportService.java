@@ -112,7 +112,7 @@ public class ReportService {
                     request.getReason().getDescription(), request.getReason().getDescription(), outputFolder);
 
             File created = new File(outputFolder);
-            storageService.uploadFile(created);
+            //storageService.uploadFile(created);
             String fileName = created.getName();
             created.delete();
             return fileName;

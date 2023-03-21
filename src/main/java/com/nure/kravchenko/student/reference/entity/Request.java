@@ -24,6 +24,12 @@ public class Request {
     @Column
     private String s3FileName;
 
+    @Column
+    private boolean approved;
+
+    @Column
+    private String comment;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "reason_id")
     @JsonBackReference
@@ -42,5 +48,4 @@ public class Request {
         worker.getRequests().add(this);
         this.worker = worker;
     }
-
 }

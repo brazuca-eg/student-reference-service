@@ -15,7 +15,7 @@ public interface IRequestService {
 
     Request findById(Long id);
 
-    RequestDto approveRequest(Worker worker, Request request, Boolean approved);
+    RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment);
 
     List<WorkerRequestDto> findWaitingRequest(Worker worker);
 

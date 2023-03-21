@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -95,11 +94,12 @@ public class RequestService implements IRequestService {
 
     @Override
     @Transactional
-    public RequestDto approveRequest(Worker worker, Request request, Boolean approved) {
+    public RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment) {
         if (approved) {
-            //approved solution
             request.setWorker(worker);
             request.setEndDate(LocalDateTime.now());
+            request.setApproved(true);
+            request.setComment("Approved");
             Request savedRequest = requestRepository.save(request);
             try {
                 String fileName = reportService.generatePdfFromHtml(savedRequest);
@@ -109,10 +109,16 @@ public class RequestService implements IRequestService {
                 throw new RuntimeException(e);
             }
         } else {
+            request.setApproved(false);
             request.setWorker(worker);
             request.setEndDate(LocalDateTime.now());
-            // TODO: 09.03.2023  create denied solution
-            return null;
+            if (StringUtils.isNoneBlank(comment)) {
+                request.setComment(comment);
+            } else {
+                request.setComment("Default denied");
+            }
+            Request savedRequest = requestRepository.save(request);
+            return conversionService.convert(savedRequest, RequestDto.class);
         }
     }
 }
