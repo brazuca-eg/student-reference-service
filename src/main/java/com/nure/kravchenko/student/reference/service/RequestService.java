@@ -84,10 +84,11 @@ public class RequestService implements IRequestService {
     }
 
     @Override
-    public List<WorkerRequestDto> findAssignedWorkerRequests(Worker worker) {
+    public List<WorkerRequestDto> findAssignedWorkerRequests(Worker worker, boolean approved) {
         return worker.getRequests()
                 .stream()
                 .filter(request -> Objects.nonNull(request.getEndDate()))
+                .filter(request -> request.isApproved() == approved)
                 .map(request -> conversionService.convert(request, WorkerRequestDto.class))
                 .collect(Collectors.toList());
     }

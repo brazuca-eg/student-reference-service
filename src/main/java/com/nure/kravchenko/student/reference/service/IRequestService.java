@@ -19,5 +19,5 @@ public interface IRequestService {
 
     List<WorkerRequestDto> findWaitingRequest(Worker worker);
 
-    List<WorkerRequestDto> findAssignedWorkerRequests(Worker worker);
+    List<WorkerRequestDto> findAssignedWorkerRequests(Worker worker, boolean approved);
 }

@@ -49,9 +49,10 @@ public class WorkerController {
     }
 
     @GetMapping("/{id}/requests/assigned")
-    public ResponseEntity<List<WorkerRequestDto>> getAssignedWorkerRequests(@PathVariable Long id) {
+    public ResponseEntity<List<WorkerRequestDto>> getAssignedWorkerRequests(@PathVariable Long id,
+                                                                            @RequestParam boolean approved) {
         Worker worker = workerService.findWorkerById(id);
-        List<WorkerRequestDto> requests = requestService.findAssignedWorkerRequests(worker);
+        List<WorkerRequestDto> requests = requestService.findAssignedWorkerRequests(worker, approved);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 

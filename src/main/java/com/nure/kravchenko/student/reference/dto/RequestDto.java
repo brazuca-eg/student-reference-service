@@ -25,4 +25,8 @@ public class RequestDto {
 
     private String s3FileName;
 
+    private boolean approved;
+
+    private String comment;
+
 }

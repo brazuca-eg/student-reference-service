@@ -16,6 +16,8 @@ public class RequestToRequestDtoConverter implements Converter<Request, RequestD
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .s3FileName(request.getS3FileName())
+                .approved(request.isApproved())
+                .comment(request.getComment())
                 .reasonName(reason.getName())
                 .reasonDescription(reason.getDescription())
                 .build();

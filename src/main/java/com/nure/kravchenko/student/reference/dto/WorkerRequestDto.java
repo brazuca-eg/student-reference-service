@@ -29,4 +29,9 @@ public class WorkerRequestDto {
 
     private Long studentId;
 
+    private boolean approved;
+
+    private String comment;
+
+
 }
