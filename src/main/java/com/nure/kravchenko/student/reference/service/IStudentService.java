@@ -6,9 +6,9 @@ import com.nure.kravchenko.student.reference.dto.StudentGroupDto;
 import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.StudentGroup;
 import com.nure.kravchenko.student.reference.entity.Ticket;
+import com.nure.kravchenko.student.reference.entity.app.RequestType;
 import com.nure.kravchenko.student.reference.payload.RegistrationDto;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
-import com.nure.kravchenko.student.reference.payload.admin.ApproveStudentRegisterDto;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public interface IStudentService {
 
     Student findByEmail(String email);
 
-    List<RequestDto> getStudentRequests(Long id,String requestFilter);
+    List<RequestDto> getStudentRequests(Long id, RequestType requestType, String requestFilter);
 
     List<StudentDto> getWaitingApproveStudents();
 

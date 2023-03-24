@@ -3,25 +3,23 @@ package com.nure.kravchenko.student.reference.service;
 import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.dto.StudentDto;
 import com.nure.kravchenko.student.reference.dto.StudentGroupDto;
-import com.nure.kravchenko.student.reference.dto.WorkerDto;
-import com.nure.kravchenko.student.reference.entity.*;
+import com.nure.kravchenko.student.reference.entity.Request;
+import com.nure.kravchenko.student.reference.entity.Student;
+import com.nure.kravchenko.student.reference.entity.StudentGroup;
+import com.nure.kravchenko.student.reference.entity.Ticket;
+import com.nure.kravchenko.student.reference.entity.app.RequestType;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.RegistrationDto;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
-import com.nure.kravchenko.student.reference.payload.admin.ApproveStudentRegisterDto;
 import com.nure.kravchenko.student.reference.repository.RequestRepository;
 import com.nure.kravchenko.student.reference.repository.StudentRepository;
 import com.nure.kravchenko.student.reference.service.report.ReportService;
 import com.nure.kravchenko.student.reference.service.utils.ValidationUtils;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -102,15 +100,37 @@ public class StudentService implements IStudentService {
     }
 
     @Override
-    public List<RequestDto> getStudentRequests(Long id, String requestFilter) {
+    public List<RequestDto> getStudentRequests(Long id, RequestType requestType, String requestFilter) {
         Student student = findStudentById(id);
         List<Request> requests = student.getRequests();
+
+        if(requests.isEmpty()){
+            return Collections.emptyList();
+        }
+
+        List<Request> resultRequests;
+        switch (requestType) {
+            case NEW:
+                resultRequests = requests.stream().filter(request -> request.getEndDate() == null)
+                        .collect(Collectors.toList());
+                break;
+            case APPROVED:
+                resultRequests = requests.stream().filter(Request::isApproved)
+                        .collect(Collectors.toList());
+                break;
+            case DENIED:
+                resultRequests = requests.stream().filter(request -> !request.isApproved())
+                        .collect(Collectors.toList());
+                break;
+            default:
+                throw new RuntimeException("not valid request type provided");
+        }
 
         if(requestFilter.equalsIgnoreCase("reasonName")){
             requests.sort(Comparator.comparing(r -> r.getReason().getName()));
         }
 
-        return requests.stream()
+        return resultRequests.stream()
                 .map(request -> conversionService.convert(request, RequestDto.class))
                 .collect(Collectors.toList());
     }

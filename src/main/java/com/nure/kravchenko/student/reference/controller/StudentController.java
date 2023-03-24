@@ -5,6 +5,7 @@ import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.dto.StudentDto;
 import com.nure.kravchenko.student.reference.dto.StudentGroupDto;
 import com.nure.kravchenko.student.reference.entity.Student;
+import com.nure.kravchenko.student.reference.entity.app.RequestType;
 import com.nure.kravchenko.student.reference.payload.CreateRequestDto;
 import com.nure.kravchenko.student.reference.service.IRequestService;
 import com.nure.kravchenko.student.reference.service.IStudentService;
@@ -49,8 +50,9 @@ public class StudentController {
     }
 
     @GetMapping("/{id}/requests")
-    public ResponseEntity<List<RequestDto>> getRequestForStudent(@PathVariable Long id, @RequestParam String filter) {
-        return new ResponseEntity<>(studentService.getStudentRequests(id,filter), HttpStatus.CREATED);
+    public ResponseEntity<List<RequestDto>> getRequestForStudent(@PathVariable Long id, @RequestParam String filter,
+                                                                 @RequestParam RequestType requestType) {
+        return new ResponseEntity<>(studentService.getStudentRequests(id,requestType, filter), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/group")

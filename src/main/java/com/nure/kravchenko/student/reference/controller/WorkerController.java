@@ -1,9 +1,6 @@
 package com.nure.kravchenko.student.reference.controller;
 
-import com.nure.kravchenko.student.reference.dto.FacultyDto;
-import com.nure.kravchenko.student.reference.dto.RequestDto;
-import com.nure.kravchenko.student.reference.dto.WorkerDto;
-import com.nure.kravchenko.student.reference.dto.WorkerRequestDto;
+import com.nure.kravchenko.student.reference.dto.*;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Worker;
 import com.nure.kravchenko.student.reference.service.IRequestService;
