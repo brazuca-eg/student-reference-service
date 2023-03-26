@@ -8,9 +8,12 @@ import com.nure.kravchenko.student.reference.payload.admin.CreateGroupDto;
 import com.nure.kravchenko.student.reference.repository.StudentGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentGroupService {
@@ -30,6 +33,17 @@ public class StudentGroupService {
             return optionalStudentGroup.get();
         }
         throw new NotFoundException("There are problems with group id");
+    }
+
+    public List<StudentGroupDto> findAll() {
+        return studentGroupRepository.findAll(sortByNameAsc())
+                .stream()
+                .map(studentGroup -> conversionService.convert(studentGroup, StudentGroupDto.class))
+                .collect(Collectors.toList());
+    }
+
+    private Sort sortByNameAsc() {
+        return Sort.by(Sort.Direction.ASC, "name");
     }
 
     public StudentGroup findGroupByName(String name) {

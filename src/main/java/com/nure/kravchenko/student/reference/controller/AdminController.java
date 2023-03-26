@@ -78,6 +78,11 @@ public class AdminController {
         return new ResponseEntity<>(specialityService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/groups")
+    public ResponseEntity<List<StudentGroupDto>> getAllGroups() {
+        return new ResponseEntity<>(studentGroupService.findAll(), HttpStatus.OK);
+    }
+
     @PostMapping("/students/{studentId}/approve")
     public ResponseEntity<StudentDto> approveStudentRegistration(
             @PathVariable Long studentId,
