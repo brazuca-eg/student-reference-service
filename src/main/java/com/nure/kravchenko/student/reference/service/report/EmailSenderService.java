@@ -40,4 +40,15 @@ public class EmailSenderService {
         javaMailSender.send(mimeMessage);
     }
 
+    public void sendMailWithoutAttachment(String toEmail, String body, String subject) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        mimeMessageHelper.setFrom(senderEmailAddress);
+        mimeMessageHelper.setTo(toEmail);
+        mimeMessageHelper.setText(body);
+        mimeMessageHelper.setSubject(subject);
+
+        javaMailSender.send(mimeMessage);
+    }
+
 }

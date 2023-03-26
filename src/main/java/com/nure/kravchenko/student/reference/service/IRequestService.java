@@ -7,6 +7,7 @@ import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.Worker;
 import com.nure.kravchenko.student.reference.payload.CreateRequestDto;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 public interface IRequestService {
@@ -15,7 +16,7 @@ public interface IRequestService {
 
     Request findById(Long id);
 
-    RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment);
+    RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment) throws MessagingException;
 
     List<WorkerRequestDto> findWaitingRequest(Worker worker);
 

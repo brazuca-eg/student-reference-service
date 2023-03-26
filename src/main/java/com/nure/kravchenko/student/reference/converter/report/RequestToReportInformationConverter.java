@@ -14,7 +14,8 @@ public class RequestToReportInformationConverter implements Converter<Request, R
     public ReportInformation convert(Request request) {
         ReportInformation reportInformation = new ReportInformation();
         Student student = request.getStudent();
-        reportInformation.setFullName(student.getName() + " " + student.getSurname() + " " + student.getFatherhood());
+        reportInformation.setFullName(student.getName() + StringUtils.SPACE + student.getSurname() +
+                StringUtils.SPACE + student.getFatherhood());
         if (student.getGender() == 'M') {
             reportInformation.setGender("він");
             reportInformation.setStudentGender("студентом");

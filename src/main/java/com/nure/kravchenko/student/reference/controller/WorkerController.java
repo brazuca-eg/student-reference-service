@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 @RestController
@@ -70,10 +71,9 @@ public class WorkerController {
                 .body(resource);
     }
 
-
     @PostMapping("/{workerId}/requests/{requestId}")
     public ResponseEntity<RequestDto> approveRequest(@PathVariable Long workerId, @PathVariable Long requestId,
-                                                     @RequestParam Boolean approve, @RequestParam String comment) {
+                                                     @RequestParam Boolean approve, @RequestParam String comment) throws MessagingException {
         Worker worker = workerService.findWorkerById(workerId);
         Request request = requestService.findById(requestId);
 

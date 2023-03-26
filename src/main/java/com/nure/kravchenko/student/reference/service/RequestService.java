@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,12 +30,15 @@ public class RequestService implements IRequestService {
 
     private final ReportService reportService;
 
+    private final EmailSenderService emailSenderService;
+
     private final ConversionService conversionService;
 
-    public RequestService(RequestRepository requestRepository, ReasonRepository reasonRepository, ReportService reportService, EmailSenderService emailSenderService, ConversionService conversionService) {
+    public RequestService(RequestRepository requestRepository, ReasonRepository reasonRepository, ReportService reportService, EmailSenderService emailSenderService, EmailSenderService emailSenderService1, ConversionService conversionService) {
         this.requestRepository = requestRepository;
         this.reasonRepository = reasonRepository;
         this.reportService = reportService;
+        this.emailSenderService = emailSenderService1;
         this.conversionService = conversionService;
     }
 
@@ -95,7 +99,7 @@ public class RequestService implements IRequestService {
 
     @Override
     @Transactional
-    public RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment) {
+    public RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment) throws MessagingException {
         if (approved) {
             request.setWorker(worker);
             request.setEndDate(LocalDateTime.now());
@@ -119,6 +123,8 @@ public class RequestService implements IRequestService {
                 request.setComment("Default denied");
             }
             Request savedRequest = requestRepository.save(request);
+            emailSenderService.sendMailWithoutAttachment("yehor.kravchenko@nure.ua",
+                    conversionService.convert(request, String.class), request.getReason().getDescription());
             return conversionService.convert(savedRequest, RequestDto.class);
         }
     }

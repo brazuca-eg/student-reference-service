@@ -109,10 +109,10 @@ public class ReportService {
             outputStream.close();
 
             emailSenderService.sendMailWithAttachment("yehor.kravchenko@nure.ua",
-                    request.getReason().getDescription(), request.getReason().getDescription(), outputFolder);
+                    conversionService.convert(request, String.class), request.getReason().getDescription(), outputFolder);
 
             File created = new File(outputFolder);
-            //storageService.uploadFile(created);
+            storageService.uploadFile(created);
             String fileName = created.getName();
             created.delete();
             return fileName;
