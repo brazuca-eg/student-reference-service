@@ -19,7 +19,7 @@ public class Student {
     private Long id;
     @Column(unique = true)
     private String email;
-    @Column(length = 20)
+    @Column(length = 128)
     private String password;
     @Column(length = 128)
     private String name;
@@ -27,7 +27,7 @@ public class Student {
     private String surname;
     @Column(length = 128)
     private String fatherhood;
-    @Column
+    @Column(length = 10000)
     private char gender;
     @Column
     private boolean approved;

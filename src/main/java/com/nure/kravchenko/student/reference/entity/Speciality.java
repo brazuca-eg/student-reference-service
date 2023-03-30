@@ -18,14 +18,17 @@ public class Speciality {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column
     private String name;
 
-    @Column(unique = true)
+    @Column
     private String shortName;
 
-    @Column(unique = true)
+    @Column
     private Integer number;
+
+    @Column(unique = true, length = 128)
+    private String educationalProgram;
 
     @OneToMany(mappedBy = "speciality")
     @JsonManagedReference

@@ -23,6 +23,10 @@ public class ReportInformation {
 
     private String faculty;
 
+    private String speciality;
+
+    private String educationalProgram;
+
     private String degreeForm;
 
     private String startDate;

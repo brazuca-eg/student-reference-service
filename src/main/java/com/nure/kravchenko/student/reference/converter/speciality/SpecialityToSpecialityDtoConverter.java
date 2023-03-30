@@ -13,6 +13,7 @@ public class SpecialityToSpecialityDtoConverter implements Converter<Speciality,
                 .name(speciality.getName())
                 .shortName(speciality.getShortName())
                 .number(speciality.getNumber())
+                .educationalProgram(speciality.getEducationalProgram())
                 .build();
     }
 

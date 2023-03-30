@@ -10,7 +10,7 @@ public class RequestToWorkerRequestDtoConverter implements Converter<Request, Wo
     @Override
     public WorkerRequestDto convert(Request request) {
         Student student = request.getStudent();
-        String fullName = student.getName() + " " + student.getSurname() + " " + student.getFatherhood();
+        String fullName = student.getSurname() + " " + student.getName() + " " + student.getFatherhood();
         Reason reason = request.getReason();
 
         return WorkerRequestDto.builder()

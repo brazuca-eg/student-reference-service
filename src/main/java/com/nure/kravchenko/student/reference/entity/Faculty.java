@@ -20,7 +20,7 @@ public class Faculty {
     @Column(unique = true, length = 128)
     private String name;
 
-    @Column(unique = true, length = 2)
+    @Column(unique = true, length = 4)
     private String shortName;
 
     @OneToMany(mappedBy = "faculty")

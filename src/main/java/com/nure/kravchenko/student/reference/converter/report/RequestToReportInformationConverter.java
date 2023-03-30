@@ -41,6 +41,8 @@ public class RequestToReportInformationConverter implements Converter<Request, R
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         Speciality speciality = studentGroup.getSpeciality();
+        reportInformation.setSpeciality(speciality.getNumber() + StringUtils.SPACE + speciality.getName());
+        reportInformation.setEducationalProgram(speciality.getEducationalProgram());
         Faculty faculty = speciality.getFaculty();
         reportInformation.setFaculty(faculty.getName());
 

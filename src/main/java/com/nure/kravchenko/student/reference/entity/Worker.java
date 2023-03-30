@@ -21,7 +21,7 @@ public class Worker {
 
     @Column(unique = true)
     private String email;
-    @Column
+    @Column(length = 128)
     private String password;
 
     @Column
@@ -40,7 +40,7 @@ public class Worker {
     @Column
     private String jobTitle;
 
-    @Column
+    @Column(length = 10000)
     private char gender;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

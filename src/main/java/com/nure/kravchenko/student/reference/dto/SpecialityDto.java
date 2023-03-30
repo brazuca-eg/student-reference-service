@@ -19,4 +19,6 @@ public class SpecialityDto {
 
     private Integer number;
 
+    private String educationalProgram;
+
 }

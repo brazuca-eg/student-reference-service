@@ -16,7 +16,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "INNER JOIN student_group sg ON sg.id = s.student_group_id\n" +
             "INNER JOIN  speciality s2 ON sg.speciality_id = s2.id\n" +
             "INNER JOIN faculty f ON f.id = s2.faculty_id\n" +
-            "WHERE r.end_date IS NULL AND speciality_id = ?1", nativeQuery = true)
+            "WHERE r.end_date IS NULL AND faculty_id = ?1", nativeQuery = true)
     List<Request> getWaitingRequestsForFaculty(Long facultyId);
 
 

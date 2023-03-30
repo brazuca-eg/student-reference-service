@@ -15,4 +15,6 @@ public class CreateSpecialityDto {
 
     private Long facultyId;
 
+    private String educationalProgram;
+
 }

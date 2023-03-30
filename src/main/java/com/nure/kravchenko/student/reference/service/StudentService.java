@@ -120,6 +120,7 @@ public class StudentService implements IStudentService {
                 break;
             case DENIED:
                 resultRequests = requests.stream().filter(request -> !request.isApproved())
+                        .filter(request -> request.getEndDate() != null)
                         .collect(Collectors.toList());
                 break;
             default:

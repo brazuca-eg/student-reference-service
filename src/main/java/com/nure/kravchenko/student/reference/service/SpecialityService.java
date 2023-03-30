@@ -2,15 +2,14 @@ package com.nure.kravchenko.student.reference.service;
 
 import com.nure.kravchenko.student.reference.dto.SpecialityDto;
 import com.nure.kravchenko.student.reference.entity.Faculty;
-import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Speciality;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.admin.CreateSpecialityDto;
 import com.nure.kravchenko.student.reference.repository.SpecialityRepository;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,7 +36,7 @@ public class SpecialityService {
     }
 
     public List<SpecialityDto> findAll() {
-        return specialityRepository.findAll()
+        return specialityRepository.findAll(Sort.by(Sort.Direction.ASC, "number"))
                 .stream()
                 .map(speciality -> conversionService.convert(speciality, SpecialityDto.class))
                 .collect(Collectors.toList());

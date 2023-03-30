@@ -5,6 +5,7 @@ import com.nure.kravchenko.student.reference.dto.ReportInformation;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.service.s3.StorageService;
+import com.nure.kravchenko.student.reference.service.utils.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,10 @@ public class ReportService {
     private static final String LEARN_FORM = "learnForm";
 
     private static final String FACULTY = "faculty";
+
+    private static final String SPECIALITY = "speciality";
+
+    private static final String EDUCATIONAL_PROGRAM = "educationalProgram";
 
     private static final String DEGREE_FORM = "degreeForm";
 
@@ -75,6 +80,8 @@ public class ReportService {
         context.setVariable(COURSE_NUMBER, reportInformation.getCourseNumber());
         context.setVariable(LEARN_FORM, reportInformation.getLearnForm());
         context.setVariable(FACULTY, reportInformation.getFaculty());
+        context.setVariable(SPECIALITY, reportInformation.getSpeciality());
+        context.setVariable(EDUCATIONAL_PROGRAM, reportInformation.getEducationalProgram());
         context.setVariable(DEGREE_FORM, reportInformation.getDegreeForm());
         context.setVariable(REASON, reportInformation.getReason());
         context.setVariable(START_DATE, reportInformation.getStartDate());
@@ -92,7 +99,8 @@ public class ReportService {
             String directory = new File("./").getAbsolutePath();
             String path = directory.substring(0, directory.length() - 1) + "src\\main\\resources\\reports\\";
             LocalDate currentDate = LocalDate.now();
-            String reportName = student.getName() + "_" + student.getSurname() + "_" + currentDate + ".pdf";
+            String reportName = student.getName() + "_" + student.getSurname() + "_" + currentDate + "_" +
+                    RandomUtils.getRandomNumber(100, 1000) + ".pdf";
             String outputFolder = path + reportName;
 
             OutputStream outputStream = new FileOutputStream(outputFolder);

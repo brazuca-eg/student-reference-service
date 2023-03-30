@@ -11,6 +11,7 @@ public class CreateSpecialityDtoToSpecialityConverter implements Converter<Creat
                 .number(createSpecialityDto.getNumber())
                 .name(createSpecialityDto.getName())
                 .shortName(createSpecialityDto.getShortName())
+                .educationalProgram(createSpecialityDto.getEducationalProgram())
                 .build();
     }
 
