@@ -7,6 +7,7 @@ import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.Worker;
 import com.nure.kravchenko.student.reference.entity.app.Role;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
+import com.nure.kravchenko.student.reference.exception.NureEmailException;
 import com.nure.kravchenko.student.reference.payload.AuthenticationRequestDto;
 import com.nure.kravchenko.student.reference.payload.RegistrationDto;
 import com.nure.kravchenko.student.reference.security.JwtTokenProvider;
@@ -63,8 +64,7 @@ public class AuthenticationController {
     public ResponseEntity<UserLoggedInDto> authenticate(@RequestBody @Valid AuthenticationRequestDto request) {
         String email = request.getEmail();
         if (BooleanUtils.isFalse(ValidationUtils.isValidEmailAddress(email))) {
-            // TODO: 05.03.2023 Add email validation pattern exception
-            throw new ValidationException("The provided email is not match with @nure pattern");
+            throw new NureEmailException("Дана email адреса не задовольняє правилам поштового акаунту ХНУРЕ");
         }
         try {
             authenticationManager.authenticate(
@@ -77,7 +77,7 @@ public class AuthenticationController {
             if (Objects.isNull(student)) {
                 worker = workerService.findByEmail(email);
                 if (Objects.isNull(worker)) {
-                    throw new NotFoundException("The user doesn't exist");
+                    throw new NotFoundException("Немає користувача з такими даними в системі");
                 } else {
                     if (worker.isAdmin()) {
                         role = Role.ADMIN.name();
@@ -102,12 +102,15 @@ public class AuthenticationController {
             return new ResponseEntity<>(resultDto, HttpStatus.OK);
         } catch (AuthenticationException e) {
             // TODO: 05.03.2023 Add forbidden exc
-            throw new NotFoundException("Forbidden");
+            throw new NotFoundException("Немає користувача з такими даними в системі");
         }
     }
 
     @PostMapping("/register")
     public ResponseEntity<Boolean> register(@RequestBody @Valid RegistrationDto registrationDto) {
+        if (BooleanUtils.isFalse(ValidationUtils.isValidEmailAddress(registrationDto.getEmail()))) {
+            throw new NureEmailException("Дана email адреса не задовольняє правилам поштового акаунту ХНУРЕ");
+        }
         if (StringUtils.equalsIgnoreCase(Role.WORKER.name(), registrationDto.getRole())) {
             WorkerDto workerDto = workerService.create(registrationDto);
             return new ResponseEntity<>(Objects.nonNull(workerDto), HttpStatus.CREATED);
@@ -115,7 +118,7 @@ public class AuthenticationController {
             StudentDto studentDto = studentService.create(registrationDto);
             return new ResponseEntity<>(Objects.nonNull(studentDto), HttpStatus.CREATED);
         }
-        throw new NotFoundException("There are problems with provided role for registration");
+        throw new NotFoundException("Немає такої ролі у системі");
     }
 
     @PostMapping("/logout")

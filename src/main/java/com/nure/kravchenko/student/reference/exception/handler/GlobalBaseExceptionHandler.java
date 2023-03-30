@@ -3,6 +3,7 @@ package com.nure.kravchenko.student.reference.exception.handler;
 import com.nure.kravchenko.student.reference.exception.ErrorResponse;
 import com.nure.kravchenko.student.reference.exception.ErrorValidationResponse;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
+import com.nure.kravchenko.student.reference.exception.NureEmailException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,13 +17,22 @@ import java.util.Map;
 @RestControllerAdvice
 public final class GlobalBaseExceptionHandler {
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(NotFoundException ex) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.errorCode(status.name()).errorDescription(ex.getMessage());
-        return ResponseEntity.badRequest().body(errorResponse);
+        return new ResponseEntity<>(errorResponse, status);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NureEmailException.class)
+    public ResponseEntity<Object> handleNureEmailException(NureEmailException ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.errorCode(status.name()).errorDescription(ex.getMessage());
+        return new ResponseEntity<>(errorResponse, status);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
