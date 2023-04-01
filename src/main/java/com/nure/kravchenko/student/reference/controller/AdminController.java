@@ -16,9 +16,9 @@ import java.util.List;
 @RequestMapping("/admins")
 public class AdminController {
 
-    private final IStudentService studentService;
+    private final StudentService studentService;
 
-    private final IRequestService requestService;
+    private final RequestService requestService;
 
     private final WorkerService workerService;
 
@@ -32,7 +32,7 @@ public class AdminController {
 
     private final SpecialityService specialityService;
 
-    public AdminController(IStudentService studentService, IRequestService requestService, WorkerService workerService, FacultyService facultyService, ReasonService reasonService,
+    public AdminController(StudentService studentService, RequestService requestService, WorkerService workerService, FacultyService facultyService, ReasonService reasonService,
                            StudentGroupService studentGroupService, TicketService ticketService, SpecialityService specialityService) {
         this.studentService = studentService;
         this.requestService = requestService;

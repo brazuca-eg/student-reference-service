@@ -7,9 +7,9 @@ import com.nure.kravchenko.student.reference.dto.StudentGroupDto;
 import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.app.RequestType;
 import com.nure.kravchenko.student.reference.payload.CreateRequestDto;
-import com.nure.kravchenko.student.reference.service.IRequestService;
-import com.nure.kravchenko.student.reference.service.IStudentService;
 import com.nure.kravchenko.student.reference.service.ReasonService;
+import com.nure.kravchenko.student.reference.service.RequestService;
+import com.nure.kravchenko.student.reference.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +22,14 @@ import java.util.List;
 @RequestMapping("/students")
 public class StudentController {
 
-    private final IStudentService studentService;
+    private final StudentService studentService;
 
-    private final IRequestService requestService;
+    private final RequestService requestService;
 
     private final ReasonService reasonService;
 
     @Autowired
-    public StudentController(IStudentService studentService, IRequestService requestService,
+    public StudentController(StudentService studentService, RequestService requestService,
                              ReasonService reasonService) {
         this.studentService = studentService;
         this.requestService = requestService;

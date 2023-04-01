@@ -1,10 +1,13 @@
 package com.nure.kravchenko.student.reference.controller;
 
-import com.nure.kravchenko.student.reference.dto.*;
+import com.nure.kravchenko.student.reference.dto.FacultyDto;
+import com.nure.kravchenko.student.reference.dto.RequestDto;
+import com.nure.kravchenko.student.reference.dto.WorkerDto;
+import com.nure.kravchenko.student.reference.dto.WorkerRequestDto;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Worker;
-import com.nure.kravchenko.student.reference.service.IRequestService;
-import com.nure.kravchenko.student.reference.service.IStudentService;
+import com.nure.kravchenko.student.reference.service.RequestService;
+import com.nure.kravchenko.student.reference.service.StudentService;
 import com.nure.kravchenko.student.reference.service.WorkerService;
 import com.nure.kravchenko.student.reference.service.s3.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +23,16 @@ import java.util.List;
 @RequestMapping("/workers")
 public class WorkerController {
 
-    private final IStudentService studentService;
+    private final StudentService studentService;
 
-    private final IRequestService requestService;
+    private final RequestService requestService;
 
     private final WorkerService workerService;
 
     private final StorageService storageService;
 
     @Autowired
-    public WorkerController(IStudentService studentService, IRequestService requestService, WorkerService workerService, StorageService storageService) {
+    public WorkerController(StudentService studentService, RequestService requestService, WorkerService workerService, StorageService storageService) {
         this.studentService = studentService;
         this.requestService = requestService;
         this.workerService = workerService;
