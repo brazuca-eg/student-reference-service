@@ -4,11 +4,12 @@ import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.entity.Reason;
 import com.nure.kravchenko.student.reference.entity.Request;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 
 public class RequestToRequestDtoConverter implements Converter<Request, RequestDto> {
 
     @Override
-    public RequestDto convert(Request request) {
+    public RequestDto convert(@NonNull Request request) {
         Reason reason = request.getReason();
 
         return RequestDto.builder()

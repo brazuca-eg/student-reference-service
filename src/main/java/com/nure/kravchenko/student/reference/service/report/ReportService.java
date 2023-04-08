@@ -107,9 +107,9 @@ public class ReportService {
                     request.getReason().getDescription(), outputFolder);
 
             File created = new File(outputFolder);
-            //storageService.uploadFile(created);
+            storageService.uploadFile(created);
             String fileName = created.getName();
-           // created.delete();
+            created.delete();
             return fileName;
         }
         throw new InvalidProvidedDataException("Студентам з непідтвердженним акаунтом не дозволено генерувати довідки");

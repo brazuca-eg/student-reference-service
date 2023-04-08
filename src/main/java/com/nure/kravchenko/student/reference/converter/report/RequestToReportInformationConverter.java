@@ -4,6 +4,7 @@ import com.nure.kravchenko.student.reference.dto.ReportInformation;
 import com.nure.kravchenko.student.reference.entity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +13,7 @@ import static com.nure.kravchenko.student.reference.service.utils.ReportConstant
 public class RequestToReportInformationConverter implements Converter<Request, ReportInformation> {
 
     @Override
-    public ReportInformation convert(Request request) {
+    public ReportInformation convert(@NonNull Request request) {
         ReportInformation reportInformation = new ReportInformation();
         Student student = request.getStudent();
         reportInformation.setFullName(student.getSurname() + StringUtils.SPACE + student.getName() +

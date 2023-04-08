@@ -3,11 +3,12 @@ package com.nure.kravchenko.student.reference.converter.worker;
 import com.nure.kravchenko.student.reference.dto.UserLoggedInDto;
 import com.nure.kravchenko.student.reference.entity.Worker;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 
 public class WorkerToUserLoggedInDtoConverter implements Converter<Worker, UserLoggedInDto> {
 
     @Override
-    public UserLoggedInDto convert(Worker worker) {
+    public UserLoggedInDto convert(@NonNull Worker worker) {
         return UserLoggedInDto.builder()
                 .id(worker.getId())
                 .email(worker.getEmail())

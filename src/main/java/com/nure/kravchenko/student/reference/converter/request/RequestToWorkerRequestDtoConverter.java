@@ -5,10 +5,12 @@ import com.nure.kravchenko.student.reference.entity.Reason;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Student;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 
 public class RequestToWorkerRequestDtoConverter implements Converter<Request, WorkerRequestDto> {
+
     @Override
-    public WorkerRequestDto convert(Request request) {
+    public WorkerRequestDto convert(@NonNull Request request) {
         Student student = request.getStudent();
         String fullName = student.getSurname() + " " + student.getName() + " " + student.getFatherhood();
         Reason reason = request.getReason();

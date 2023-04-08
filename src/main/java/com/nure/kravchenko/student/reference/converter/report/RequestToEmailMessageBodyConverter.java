@@ -5,6 +5,7 @@ import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.Worker;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 
 import java.time.format.DateTimeFormatter;
 
@@ -13,7 +14,7 @@ public class RequestToEmailMessageBodyConverter implements Converter<Request, St
     final static DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
-    public String convert(Request request) {
+    public String convert(@NonNull Request request) {
         String greetingsPart = "Доброго дня!\n\n";
         Student student = request.getStudent();
         String fullName = student.getSurname() + StringUtils.SPACE +

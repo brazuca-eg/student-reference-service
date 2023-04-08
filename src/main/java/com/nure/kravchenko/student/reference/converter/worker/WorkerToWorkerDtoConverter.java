@@ -3,11 +3,12 @@ package com.nure.kravchenko.student.reference.converter.worker;
 import com.nure.kravchenko.student.reference.dto.WorkerDto;
 import com.nure.kravchenko.student.reference.entity.Worker;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 
 public class WorkerToWorkerDtoConverter  implements Converter<Worker, WorkerDto> {
 
     @Override
-    public WorkerDto convert(Worker worker) {
+    public WorkerDto convert(@NonNull Worker worker) {
         return WorkerDto.builder()
                 .id(worker.getId())
                 .name(worker.getName())
