@@ -8,21 +8,21 @@ import org.springframework.core.convert.converter.Converter;
 
 import java.time.format.DateTimeFormatter;
 
-public class RequestToApprovedMessageBodyConverter implements Converter<Request, String> {
+public class RequestToEmailMessageBodyConverter implements Converter<Request, String> {
 
     final static DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public String convert(Request request) {
-        String greetingsPart = "Доброго дня!\n";
+        String greetingsPart = "Доброго дня!\n\n";
         Student student = request.getStudent();
-        String fullName = student.getName() + StringUtils.SPACE +
-                student.getSurname() + StringUtils.SPACE + student.getFatherhood();
+        String fullName = student.getSurname() + StringUtils.SPACE +
+                student.getName() + StringUtils.SPACE + student.getFatherhood();
         String endDate = request.getEndDate().format(CUSTOM_FORMATTER);
         Worker worker = request.getWorker();
         String workerJobTitle = worker.getJobTitle();
-        String workerFullName = worker.getName() + StringUtils.SPACE +
-                worker.getSurname() + StringUtils.SPACE + worker.getFatherhood();
+        String workerFullName = worker.getSurname() + StringUtils.SPACE +
+                worker.getName() + StringUtils.SPACE + worker.getFatherhood();
         String workerEmail = worker.getEmail();
 
         if (request.isApproved()) {
@@ -31,7 +31,7 @@ public class RequestToApprovedMessageBodyConverter implements Converter<Request,
                     "Дата надання довідки: " + endDate + "\n";
 
 
-            String workerInfoPart = "Надання довідки підтвердив:" + workerJobTitle + " - " + workerFullName + "\n";
+            String workerInfoPart = "Надання довідки підтвердив:" + workerJobTitle + " - " + workerFullName + "\n\n";
 
             String questionPart = "Якщо у Вас залишились запитання звертайтеся до робітника деканату, " +
                     "який підтвердив видачу довідки про навчання за його робочим email - " + workerEmail;
@@ -47,7 +47,7 @@ public class RequestToApprovedMessageBodyConverter implements Converter<Request,
             String workerInfoPart = "Надання довідки відхилив:" + workerJobTitle + " - " + workerFullName + "\n";
 
             String deniedReasonPart = "Причина відхилення довідки, яку вказав робітник деканату: "
-                    + request.getComment() + "\n";
+                    + request.getComment() + "\n\n";
             String questionPart = "Якщо у Вас залишились запитання звертайтеся до робітника деканату, " +
                     "який відхилив видачу довідки про навчання за його робочим email - " + workerEmail;
 

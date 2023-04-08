@@ -1,9 +1,6 @@
 package com.nure.kravchenko.student.reference.exception.handler;
 
-import com.nure.kravchenko.student.reference.exception.ErrorResponse;
-import com.nure.kravchenko.student.reference.exception.ErrorValidationResponse;
-import com.nure.kravchenko.student.reference.exception.NotFoundException;
-import com.nure.kravchenko.student.reference.exception.NureEmailException;
+import com.nure.kravchenko.student.reference.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -50,6 +47,15 @@ public final class GlobalBaseExceptionHandler {
                 .build();
 
         return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    @ExceptionHandler(InvalidProvidedDataException.class)
+    public ResponseEntity<Object> handleInvalidArgument(InvalidProvidedDataException ex) {
+        HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.errorCode(status.name()).errorDescription(ex.getMessage());
+        return new ResponseEntity<>(errorResponse, status);
     }
 
 }

@@ -4,6 +4,7 @@ import com.lowagie.text.pdf.BaseFont;
 import com.nure.kravchenko.student.reference.dto.ReportInformation;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Student;
+import com.nure.kravchenko.student.reference.exception.InvalidProvidedDataException;
 import com.nure.kravchenko.student.reference.service.s3.StorageService;
 import com.nure.kravchenko.student.reference.service.utils.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,35 +22,16 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.Locale;
+import java.util.Objects;
+
+import static com.nure.kravchenko.student.reference.service.utils.ReportConstants.*;
 
 @Service
 public class ReportService {
 
-    private static final String FULL_NAME = "fullName";
+    private static final int MIN = 100;
 
-    private static final String GENDER = "gender";
-
-    private static final String STUDENT_GENDER = "studentGender";
-
-    private static final String COURSE_NUMBER = "courseNumber";
-
-    private static final String LEARN_FORM = "learnForm";
-
-    private static final String FACULTY = "faculty";
-
-    private static final String SPECIALITY = "speciality";
-
-    private static final String EDUCATIONAL_PROGRAM = "educationalProgram";
-
-    private static final String DEGREE_FORM = "degreeForm";
-
-    private static final String START_DATE = "startDate";
-
-    private static final String END_DATE = "endDate";
-
-    private static final String REASON = "reason";
-
-    private static final String REPORT_DATE = "reportDate";
+    private static final int MAX = 1000;
 
     private final StorageService storageService;
 
@@ -66,14 +48,14 @@ public class ReportService {
 
     private String parseThymeleafTemplate(ReportInformation reportInformation) {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setSuffix(".html");
+        templateResolver.setSuffix(HTML_EXTENSION);
         templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCharacterEncoding("UTF-8");
+        templateResolver.setCharacterEncoding(REPORT_ENCODING);
 
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(templateResolver);
 
-        Context context = new Context(new Locale("RU"));
+        Context context = new Context(new Locale(REPORT_LANGUAGE));
         context.setVariable(FULL_NAME, reportInformation.getFullName());
         context.setVariable(GENDER, reportInformation.getGender());
         context.setVariable(STUDENT_GENDER, reportInformation.getStudentGender());
@@ -100,16 +82,18 @@ public class ReportService {
             String path = directory.substring(0, directory.length() - 1) + "src\\main\\resources\\reports\\";
             LocalDate currentDate = LocalDate.now();
             String reportName = student.getName() + "_" + student.getSurname() + "_" + currentDate + "_" +
-                    RandomUtils.getRandomNumber(100, 1000) + ".pdf";
+                    RandomUtils.getRandomNumber(MIN, MAX) + PDF_EXTENSION;
             String outputFolder = path + reportName;
 
             OutputStream outputStream = new FileOutputStream(outputFolder);
 
             ClassLoader classLoader = getClass().getClassLoader();
-            File fontFile = new File(classLoader.getResource("static/verdana.ttf").getFile());
+            File fontFile = new File(Objects.requireNonNull(classLoader
+                    .getResource(REPORT_FONT)).getFile());
 
             ITextRenderer renderer = new ITextRenderer();
             renderer.getFontResolver().addFont(fontFile.getPath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            assert reportInformation != null;
             renderer.setDocumentFromString(parseThymeleafTemplate(reportInformation));
             renderer.layout();
             renderer.createPDF(outputStream);
@@ -117,7 +101,8 @@ public class ReportService {
             outputStream.close();
 
             emailSenderService.sendMailWithAttachment("yehor.kravchenko@nure.ua",
-                    conversionService.convert(request, String.class), request.getReason().getDescription(), outputFolder);
+                    conversionService.convert(request, String.class),
+                    request.getReason().getDescription(), outputFolder);
 
             File created = new File(outputFolder);
             storageService.uploadFile(created);
@@ -125,6 +110,6 @@ public class ReportService {
             created.delete();
             return fileName;
         }
-        throw new RuntimeException("Student not approved exception");
+        throw new InvalidProvidedDataException("Студентам з непідтвердженним акаунтом не дозволено генерувати довідки");
     }
 }

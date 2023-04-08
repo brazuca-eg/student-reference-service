@@ -6,7 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.converter.Converter;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
+import static com.nure.kravchenko.student.reference.service.utils.ReportConstants.REPORT_DATE_PATTERN;
 
 public class RequestToReportInformationConverter implements Converter<Request, ReportInformation> {
 
@@ -14,7 +15,7 @@ public class RequestToReportInformationConverter implements Converter<Request, R
     public ReportInformation convert(Request request) {
         ReportInformation reportInformation = new ReportInformation();
         Student student = request.getStudent();
-        reportInformation.setFullName(student.getName() + StringUtils.SPACE + student.getSurname() +
+        reportInformation.setFullName(student.getSurname() + StringUtils.SPACE + student.getName() +
                 StringUtils.SPACE + student.getFatherhood());
         if (student.getGender() == 'M') {
             reportInformation.setGender("він");
@@ -35,10 +36,9 @@ public class RequestToReportInformationConverter implements Converter<Request, R
             reportInformation.setLearnForm("заочної");
         }
         reportInformation.setDegreeForm(studentGroup.getDegreeForm());
-        reportInformation.setStartDate(studentGroup.getStartYear().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        reportInformation.setEndDate(studentGroup.getEndYear().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        reportInformation.setReportDate(request.getEndDate()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        reportInformation.setStartDate(studentGroup.getStartYear().format(REPORT_DATE_PATTERN));
+        reportInformation.setEndDate(studentGroup.getEndYear().format(REPORT_DATE_PATTERN));
+        reportInformation.setReportDate(request.getEndDate().format(REPORT_DATE_PATTERN));
 
         Speciality speciality = studentGroup.getSpeciality();
         reportInformation.setSpeciality(speciality.getNumber() + StringUtils.SPACE + speciality.getName());

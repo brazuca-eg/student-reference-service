@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-  <style>
-    body {background-color: white; font-family: Verdana}
-    h1   {color: black;}
-    p    {color: black;}
-  </style>
-</head>
+    <style>
+      body {background-color: white; font-family: Verdana}
+      h1   {color: black; text-align: center; align-content: center}
+      p    {color: black;}
+    </style>
+  </head>
 
-<body>
-  <div style="float: right">
-    <img src="https://nure.ua/wp-content/themes/nure/images/logo.png?v=2.0"/>
-  </div>
+  <body>
+    <div style="float: right">
+      <img src="https://nure.ua/wp-content/themes/nure/images/logo.png?v=2.0"/>
+    </div>
 
-  <h1 class="text-center">Довідка</h1>
+  <h1>Довідка</h1>
 
-  <p th:text="'Видана для ' + ${fullName} + ' в тому, що ' + ${gender} +  ' є ' + ${studentGender} + ' ' + ${courseNumber} + ' курсу ' + ${learnForm} +  ' форми навчання факультету ' + ${faculty} + ' спеціальності ' +  ${speciality} + ' освітньої програми ' + ${educationalProgram} + ' Харківського технічного університету радіоелектроніки IV рівня акредитації.'"></p>
-  <p th:text="'Термін навчання за освітньо-кваліфікаційним рівнем ' + ${degreeForm} + ' з ' + ${startDate} +  ' по ' + ${endDate} + '.'"></p>
-  <p th:text="'Довідка видана для подання до ' + ${reason}"></p>
-  <p th:text="'Дата надання довідки: ' + ${reportDate}"></p>
+    <p th:text="'Видана для ' + ${fullName} + ' в тому, що ' + ${gender} +  ' є ' + ${studentGender} + ' ' +
+    ${courseNumber} + ' курсу ' + ${learnForm} +  ' форми навчання факультету ' + ${faculty} + ' спеціальності ' +
+    ${speciality} + ' освітньої програми ' + ${educationalProgram} +
+    ' Харківського технічного університету радіоелектроніки IV рівня акредитації.'">
+    </p>
+    <p th:text="'Термін навчання за освітньо-кваліфікаційним рівнем ' + ${degreeForm} + ' з ' + ${startDate} +
+    ' по ' + ${endDate} + '.'"></p>
+    <p th:text="'Довідка видана для подання до ' + ${reason} + '.'"></p>
+    <p th:text="'Дата надання довідки: ' + ${reportDate}"></p>
 
-</body>
+  </body>
 </html>

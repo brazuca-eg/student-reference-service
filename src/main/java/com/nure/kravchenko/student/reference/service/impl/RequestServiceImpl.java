@@ -3,6 +3,7 @@ package com.nure.kravchenko.student.reference.service.impl;
 import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.dto.WorkerRequestDto;
 import com.nure.kravchenko.student.reference.entity.*;
+import com.nure.kravchenko.student.reference.exception.InvalidProvidedDataException;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.CreateRequestDto;
 import com.nure.kravchenko.student.reference.repository.ReasonRepository;
@@ -70,7 +71,7 @@ public class RequestServiceImpl implements RequestService {
                     throw new NotFoundException("Invalid reason name provided");
                 }
             } else {
-                throw new NotFoundException("Invalid ticket data");
+                throw new InvalidProvidedDataException("Ви не пройшли верифікацію для ствоерння запиту");
             }
         }
         throw new NotFoundException("Error while creating request");
