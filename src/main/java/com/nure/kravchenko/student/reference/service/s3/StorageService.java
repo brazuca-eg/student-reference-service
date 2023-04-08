@@ -28,7 +28,6 @@ public class StorageService {
     public String uploadFile(File file) {
         s3Client.putObject(new PutObjectRequest(bucketName, file.getName(), file));
 
-        //fileObj.delete();
         return "File uploaded : " + file.getName();
     }
 

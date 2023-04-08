@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Objects;
 
+import static com.nure.kravchenko.student.reference.service.utils.ProjectConstants.UNDERSCORE;
 import static com.nure.kravchenko.student.reference.service.utils.ReportConstants.*;
 
 @Service
@@ -81,7 +82,8 @@ public class ReportService {
             String directory = new File("./").getAbsolutePath();
             String path = directory.substring(0, directory.length() - 1) + "src\\main\\resources\\reports\\";
             LocalDate currentDate = LocalDate.now();
-            String reportName = student.getName() + "_" + student.getSurname() + "_" + currentDate + "_" +
+            String reportName = student.getSurname() + UNDERSCORE + student.getName() + UNDERSCORE +
+                    student.getFatherhood() + UNDERSCORE + currentDate + UNDERSCORE +
                     RandomUtils.getRandomNumber(MIN, MAX) + PDF_EXTENSION;
             String outputFolder = path + reportName;
 
@@ -105,9 +107,9 @@ public class ReportService {
                     request.getReason().getDescription(), outputFolder);
 
             File created = new File(outputFolder);
-            storageService.uploadFile(created);
+            //storageService.uploadFile(created);
             String fileName = created.getName();
-            created.delete();
+           // created.delete();
             return fileName;
         }
         throw new InvalidProvidedDataException("Студентам з непідтвердженним акаунтом не дозволено генерувати довідки");

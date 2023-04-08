@@ -27,28 +27,29 @@ public class EmailSenderService {
 
     public void sendMailWithAttachment(String toEmail, String body,
                                        String subject, String attachmentPath) throws MessagingException {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-        mimeMessageHelper.setFrom(senderEmailAddress);
-        mimeMessageHelper.setTo(toEmail);
-        mimeMessageHelper.setText(body);
-        mimeMessageHelper.setSubject(subject);
-
-        FileSystemResource fileSystemResource = new FileSystemResource(new File(attachmentPath));
-        mimeMessageHelper.addAttachment(Objects.requireNonNull(fileSystemResource.getFilename()),
-                fileSystemResource);
-        javaMailSender.send(mimeMessage);
+        javaMailSender.send(createMessageBaseInfo(toEmail, body, subject, true, attachmentPath));
     }
 
     public void sendMailWithoutAttachment(String toEmail, String body, String subject) throws MessagingException {
+        javaMailSender.send(createMessageBaseInfo(toEmail, body, subject, false, null));
+    }
+
+    private MimeMessage createMessageBaseInfo(String toEmail, String body, String subject, boolean isMultipart, String attachmentPath) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        MimeMessageHelper mimeMessageHelper;
+        if (isMultipart) {
+            mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+            FileSystemResource fileSystemResource = new FileSystemResource(new File(attachmentPath));
+            mimeMessageHelper.addAttachment(Objects.requireNonNull(fileSystemResource.getFilename()),
+                    fileSystemResource);
+        } else {
+            mimeMessageHelper = new MimeMessageHelper(mimeMessage, false);
+        }
         mimeMessageHelper.setFrom(senderEmailAddress);
         mimeMessageHelper.setTo(toEmail);
         mimeMessageHelper.setText(body);
         mimeMessageHelper.setSubject(subject);
-
-        javaMailSender.send(mimeMessage);
+        return mimeMessage;
     }
 
 }

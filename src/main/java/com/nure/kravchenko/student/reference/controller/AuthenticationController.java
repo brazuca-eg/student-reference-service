@@ -96,6 +96,7 @@ public class AuthenticationController {
             } else {
                 resultDto = conversionService.convert(worker, UserLoggedInDto.class);
             }
+            assert resultDto != null;
             resultDto.setToken(token);
             resultDto.setRole(role);
             return new ResponseEntity<>(resultDto, HttpStatus.OK);
