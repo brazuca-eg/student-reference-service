@@ -31,10 +31,10 @@ class FacultyServiceImplTest {
     private static final String SHORT_NAME = "Short Name";
 
     @Mock
-    private FacultyRepository facultyRepository;
+    private ConversionService conversionService;
 
     @Mock
-    private ConversionService conversionService;
+    private FacultyRepository facultyRepository;
 
     private FacultyService facultyService;
 
