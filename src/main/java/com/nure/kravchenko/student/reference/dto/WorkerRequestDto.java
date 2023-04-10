@@ -21,6 +21,10 @@ public class WorkerRequestDto {
 
     private String reasonDescription;
 
+    private String specialityName;
+
+    private String educationalProgram;
+
     private String groupName;
 
     private String studentFullName;

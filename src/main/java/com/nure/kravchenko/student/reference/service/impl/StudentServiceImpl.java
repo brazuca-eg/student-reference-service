@@ -3,10 +3,8 @@ package com.nure.kravchenko.student.reference.service.impl;
 import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.dto.StudentDto;
 import com.nure.kravchenko.student.reference.dto.StudentGroupDto;
-import com.nure.kravchenko.student.reference.entity.Request;
-import com.nure.kravchenko.student.reference.entity.Student;
-import com.nure.kravchenko.student.reference.entity.StudentGroup;
-import com.nure.kravchenko.student.reference.entity.Ticket;
+import com.nure.kravchenko.student.reference.dto.StudentToUniInfoDto;
+import com.nure.kravchenko.student.reference.entity.*;
 import com.nure.kravchenko.student.reference.entity.app.RequestType;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.RegistrationDto;
@@ -16,6 +14,7 @@ import com.nure.kravchenko.student.reference.repository.StudentRepository;
 import com.nure.kravchenko.student.reference.service.StudentService;
 import com.nure.kravchenko.student.reference.service.report.ReportService;
 import com.nure.kravchenko.student.reference.service.utils.ValidationUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -105,7 +104,7 @@ public class StudentServiceImpl implements StudentService {
         Student student = findStudentById(id);
         List<Request> requests = student.getRequests();
 
-        if(requests.isEmpty()){
+        if (requests.isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -128,7 +127,7 @@ public class StudentServiceImpl implements StudentService {
                 throw new RuntimeException("not valid request type provided");
         }
 
-        if(requestFilter.equalsIgnoreCase("reasonName")){
+        if (requestFilter.equalsIgnoreCase("reasonName")) {
             requests.sort(Comparator.comparing(r -> r.getReason().getName()));
         }
 
@@ -147,7 +146,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentDto approveStudentRegistration(Student student, StudentGroup studentGroup, Ticket ticket) {
-        if(!student.isApproved()){
+        if (!student.isApproved()) {
             student.setStudentGroup(studentGroup);
             student.setTicket(ticket);
             student.setApproved(true);
@@ -155,6 +154,28 @@ public class StudentServiceImpl implements StudentService {
             return conversionService.convert(updated, StudentDto.class);
         }
         throw new NotFoundException("The user is already approved");
+    }
+
+    @Override
+    public StudentToUniInfoDto getStudentToUniInfo(Student student) {
+        StudentToUniInfoDto studentToUniInfoDto = new StudentToUniInfoDto();
+
+        StudentGroup studentGroup = student.getStudentGroup();
+        if (Objects.nonNull(studentGroup)) {
+            studentToUniInfoDto.setGroupName(studentGroup.getName());
+            studentToUniInfoDto.setDegreeForm(studentGroup.getDegreeForm());
+            studentToUniInfoDto.setLearnForm(studentGroup.getLearnForm());
+            studentToUniInfoDto.setGroupStartYear(studentGroup.getStartYear());
+            studentToUniInfoDto.setGroupEndYear(studentGroup.getEndYear());
+
+            Speciality speciality = studentGroup.getSpeciality();
+            studentToUniInfoDto.setSpecialityName(speciality.getNumber() + StringUtils.SPACE + speciality.getName());
+            studentToUniInfoDto.setEducationalProgram(speciality.getEducationalProgram());
+            Faculty faculty = speciality.getFaculty();
+            studentToUniInfoDto.setFacultyName(faculty.getName());
+        }
+
+        return studentToUniInfoDto;
     }
 
     public Student save(Student student) {

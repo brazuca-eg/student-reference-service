@@ -3,6 +3,7 @@ package com.nure.kravchenko.student.reference.service;
 import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.dto.StudentDto;
 import com.nure.kravchenko.student.reference.dto.StudentGroupDto;
+import com.nure.kravchenko.student.reference.dto.StudentToUniInfoDto;
 import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.entity.StudentGroup;
 import com.nure.kravchenko.student.reference.entity.Ticket;
@@ -34,4 +35,5 @@ public interface StudentService {
 
     StudentDto approveStudentRegistration(Student student, StudentGroup studentGroup, Ticket ticket );
 
+    StudentToUniInfoDto getStudentToUniInfo(Student student);
 }
