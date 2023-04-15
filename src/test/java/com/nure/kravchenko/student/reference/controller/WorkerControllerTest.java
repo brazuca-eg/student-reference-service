@@ -3,6 +3,7 @@ package com.nure.kravchenko.student.reference.controller;
 import com.nure.kravchenko.student.reference.AbstractTest;
 import com.nure.kravchenko.student.reference.dto.FacultyDto;
 import com.nure.kravchenko.student.reference.dto.WorkerDto;
+import com.nure.kravchenko.student.reference.service.ReasonService;
 import com.nure.kravchenko.student.reference.service.RequestService;
 import com.nure.kravchenko.student.reference.service.StudentService;
 import com.nure.kravchenko.student.reference.service.WorkerService;
@@ -56,11 +57,14 @@ class WorkerControllerTest extends AbstractTest {
     @Mock
     private StorageService storageService;
 
+    @Mock
+    private ReasonService reasonService;
+
     private MockMvc mockMvc;
 
     @BeforeEach
     public void setUp() {
-        WorkerController workerController = new WorkerController(studentService, requestService, workerService, storageService);
+        WorkerController workerController = new WorkerController(studentService, requestService, reasonService, workerService, storageService);
         mockMvc = MockMvcBuilders.standaloneSetup(workerController).build();
     }
 

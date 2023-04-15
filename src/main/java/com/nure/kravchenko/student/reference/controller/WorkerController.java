@@ -1,11 +1,9 @@
 package com.nure.kravchenko.student.reference.controller;
 
-import com.nure.kravchenko.student.reference.dto.FacultyDto;
-import com.nure.kravchenko.student.reference.dto.RequestDto;
-import com.nure.kravchenko.student.reference.dto.WorkerDto;
-import com.nure.kravchenko.student.reference.dto.WorkerRequestDto;
+import com.nure.kravchenko.student.reference.dto.*;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Worker;
+import com.nure.kravchenko.student.reference.service.ReasonService;
 import com.nure.kravchenko.student.reference.service.RequestService;
 import com.nure.kravchenko.student.reference.service.StudentService;
 import com.nure.kravchenko.student.reference.service.WorkerService;
@@ -27,14 +25,17 @@ public class WorkerController {
 
     private final RequestService requestService;
 
+    private final ReasonService reasonService;
+
     private final WorkerService workerService;
 
     private final StorageService storageService;
 
     @Autowired
-    public WorkerController(StudentService studentService, RequestService requestService, WorkerService workerService, StorageService storageService) {
+    public WorkerController(StudentService studentService, RequestService requestService, ReasonService reasonService, WorkerService workerService, StorageService storageService) {
         this.studentService = studentService;
         this.requestService = requestService;
+        this.reasonService = reasonService;
         this.workerService = workerService;
         this.storageService = storageService;
     }
@@ -81,6 +82,11 @@ public class WorkerController {
         Request request = requestService.findById(requestId);
 
         return new ResponseEntity<>(requestService.approveRequest(worker, request, approve, comment), HttpStatus.OK);
+    }
+
+    @GetMapping("/requests/reasons")
+    public ResponseEntity<List<ReasonDto>> getAllRequestReasons() {
+        return new ResponseEntity<>(reasonService.getAllReasons(), HttpStatus.OK);
     }
 
 }
