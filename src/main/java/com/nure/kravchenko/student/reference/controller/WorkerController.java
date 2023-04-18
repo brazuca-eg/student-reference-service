@@ -3,10 +3,7 @@ package com.nure.kravchenko.student.reference.controller;
 import com.nure.kravchenko.student.reference.dto.*;
 import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Worker;
-import com.nure.kravchenko.student.reference.service.ReasonService;
-import com.nure.kravchenko.student.reference.service.RequestService;
-import com.nure.kravchenko.student.reference.service.StudentService;
-import com.nure.kravchenko.student.reference.service.WorkerService;
+import com.nure.kravchenko.student.reference.service.*;
 import com.nure.kravchenko.student.reference.service.s3.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -31,13 +28,16 @@ public class WorkerController {
 
     private final StorageService storageService;
 
+    private final SpecialityService specialityService;
+
     @Autowired
-    public WorkerController(StudentService studentService, RequestService requestService, ReasonService reasonService, WorkerService workerService, StorageService storageService) {
+    public WorkerController(StudentService studentService, RequestService requestService, ReasonService reasonService, WorkerService workerService, StorageService storageService, SpecialityService specialityService) {
         this.studentService = studentService;
         this.requestService = requestService;
         this.reasonService = reasonService;
         this.workerService = workerService;
         this.storageService = storageService;
+        this.specialityService = specialityService;
     }
 
     @GetMapping("/{id}")
@@ -87,6 +87,11 @@ public class WorkerController {
     @GetMapping("/requests/reasons")
     public ResponseEntity<List<ReasonDto>> getAllRequestReasons() {
         return new ResponseEntity<>(reasonService.getAllReasons(), HttpStatus.OK);
+    }
+
+    @GetMapping("/specialities")
+    public ResponseEntity<List<SpecialityDto>> getAllSpecialities() {
+        return new ResponseEntity<>(specialityService.findAll(), HttpStatus.OK);
     }
 
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -83,6 +84,7 @@ public class RequestServiceImpl implements RequestService {
         if (Objects.nonNull(faculty)) {
             List<Request> requests = requestRepository.getWaitingRequestsForFaculty(faculty.getId());
             return requests.stream()
+                    .sorted(Comparator.comparing(Request::getStartDate).reversed())
                     .map(request -> conversionService.convert(request, WorkerRequestDto.class))
                     .collect(Collectors.toList());
         }
@@ -95,6 +97,7 @@ public class RequestServiceImpl implements RequestService {
                 .stream()
                 .filter(request -> Objects.nonNull(request.getEndDate()))
                 .filter(request -> request.isApproved() == approved)
+                .sorted(Comparator.comparing(Request::getEndDate).reversed())
                 .map(request -> conversionService.convert(request, WorkerRequestDto.class))
                 .collect(Collectors.toList());
     }

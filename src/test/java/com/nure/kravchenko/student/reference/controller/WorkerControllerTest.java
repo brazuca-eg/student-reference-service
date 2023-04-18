@@ -3,10 +3,7 @@ package com.nure.kravchenko.student.reference.controller;
 import com.nure.kravchenko.student.reference.AbstractTest;
 import com.nure.kravchenko.student.reference.dto.FacultyDto;
 import com.nure.kravchenko.student.reference.dto.WorkerDto;
-import com.nure.kravchenko.student.reference.service.ReasonService;
-import com.nure.kravchenko.student.reference.service.RequestService;
-import com.nure.kravchenko.student.reference.service.StudentService;
-import com.nure.kravchenko.student.reference.service.WorkerService;
+import com.nure.kravchenko.student.reference.service.*;
 import com.nure.kravchenko.student.reference.service.s3.StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,11 +57,14 @@ class WorkerControllerTest extends AbstractTest {
     @Mock
     private ReasonService reasonService;
 
+    @Mock
+    private SpecialityService specialityService;
+
     private MockMvc mockMvc;
 
     @BeforeEach
     public void setUp() {
-        WorkerController workerController = new WorkerController(studentService, requestService, reasonService, workerService, storageService);
+        WorkerController workerController = new WorkerController(studentService, requestService, reasonService, workerService, storageService, specialityService);
         mockMvc = MockMvcBuilders.standaloneSetup(workerController).build();
     }
 

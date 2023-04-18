@@ -111,16 +111,22 @@ public class StudentServiceImpl implements StudentService {
         List<Request> resultRequests;
         switch (requestType) {
             case NEW:
-                resultRequests = requests.stream().filter(request -> request.getEndDate() == null)
+                resultRequests = requests.stream()
+                        .filter(request -> request.getEndDate() == null)
+                        .sorted(Comparator.comparing(Request::getStartDate).reversed())
                         .collect(Collectors.toList());
                 break;
             case APPROVED:
-                resultRequests = requests.stream().filter(Request::isApproved)
+                resultRequests = requests.stream()
+                        .filter(Request::isApproved)
+                        .sorted(Comparator.comparing(Request::getEndDate).reversed())
                         .collect(Collectors.toList());
                 break;
             case DENIED:
-                resultRequests = requests.stream().filter(request -> !request.isApproved())
+                resultRequests = requests.stream()
+                        .filter(request -> !request.isApproved())
                         .filter(request -> request.getEndDate() != null)
+                        .sorted(Comparator.comparing(Request::getEndDate).reversed())
                         .collect(Collectors.toList());
                 break;
             default:
