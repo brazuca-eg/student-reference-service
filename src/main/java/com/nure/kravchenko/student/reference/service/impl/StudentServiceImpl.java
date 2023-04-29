@@ -13,6 +13,7 @@ import com.nure.kravchenko.student.reference.repository.RequestRepository;
 import com.nure.kravchenko.student.reference.repository.StudentRepository;
 import com.nure.kravchenko.student.reference.service.StudentService;
 import com.nure.kravchenko.student.reference.service.report.ReportService;
+import com.nure.kravchenko.student.reference.service.utils.FindSortingComparatorUtil;
 import com.nure.kravchenko.student.reference.service.utils.ValidationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +101,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<RequestDto> getStudentRequests(Long id, RequestType requestType, String requestFilter) {
+    public List<RequestDto> getStudentRequests(Long id, RequestType requestType, String filter) {
         Student student = findStudentById(id);
         List<Request> requests = student.getRequests();
 
@@ -133,11 +134,11 @@ public class StudentServiceImpl implements StudentService {
                 throw new RuntimeException("not valid request type provided");
         }
 
-        if (requestFilter.equalsIgnoreCase("reasonName")) {
-            requests.sort(Comparator.comparing(r -> r.getReason().getName()));
-        }
+        Comparator<Request> comparator = FindSortingComparatorUtil.findSortingComparator(filter);
+
 
         return resultRequests.stream()
+                .sorted(comparator)
                 .map(request -> conversionService.convert(request, RequestDto.class))
                 .collect(Collectors.toList());
     }

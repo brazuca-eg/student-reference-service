@@ -52,15 +52,16 @@ public class WorkerController {
 
     @GetMapping("/{id}/requests/assigned")
     public ResponseEntity<List<WorkerRequestDto>> getAssignedWorkerRequests(@PathVariable Long id,
-                                                                            @RequestParam boolean approved) {
+                                                                            @RequestParam boolean approved,
+                                                                            @RequestParam String filter) {
         Worker worker = workerService.findWorkerById(id);
-        List<WorkerRequestDto> requests = requestService.findAssignedWorkerRequests(worker, approved);
+        List<WorkerRequestDto> requests = requestService.findAssignedWorkerRequests(worker, approved, filter);
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/requests/nonAssigned")
-    public ResponseEntity<List<WorkerRequestDto>> getNonAssignedRequestsByWorkerFaculty(@PathVariable Long id) {
-        return new ResponseEntity<>(requestService.findWaitingRequest(workerService.findWorkerById(id)), HttpStatus.OK);
+    public ResponseEntity<List<WorkerRequestDto>> getNonAssignedRequestsByWorkerFaculty(@PathVariable Long id,  @RequestParam String filter) {
+        return new ResponseEntity<>(requestService.findWaitingRequest(workerService.findWorkerById(id), filter), HttpStatus.OK);
     }
 
     @GetMapping("/requests/download/{fileName}")

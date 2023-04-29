@@ -1,5 +1,6 @@
 package com.nure.kravchenko.student.reference.service.impl;
 
+import com.nure.kravchenko.student.reference.comparators.*;
 import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.dto.WorkerRequestDto;
 import com.nure.kravchenko.student.reference.entity.*;
@@ -11,6 +12,7 @@ import com.nure.kravchenko.student.reference.repository.RequestRepository;
 import com.nure.kravchenko.student.reference.service.RequestService;
 import com.nure.kravchenko.student.reference.service.report.EmailSenderService;
 import com.nure.kravchenko.student.reference.service.report.ReportService;
+import com.nure.kravchenko.student.reference.service.utils.FindSortingComparatorUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -79,25 +81,32 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<WorkerRequestDto> findWaitingRequest(Worker worker) {
+    public List<WorkerRequestDto> findWaitingRequest(Worker worker, String filter) {
         Faculty faculty = worker.getFaculty();
         if (Objects.nonNull(faculty)) {
             List<Request> requests = requestRepository.getWaitingRequestsForFaculty(faculty.getId());
+            Comparator<Request> comparator = FindSortingComparatorUtil.findSortingComparator(filter);
+
             return requests.stream()
-                    .sorted(Comparator.comparing(Request::getStartDate).reversed())
+                    .sorted(comparator)
                     .map(request -> conversionService.convert(request, WorkerRequestDto.class))
                     .collect(Collectors.toList());
+
         }
-        throw new NotFoundException("There worker doesn't have a faculty");
+        throw new NotFoundException("Робітник не належить до жодного деканату");
     }
 
     @Override
-    public List<WorkerRequestDto> findAssignedWorkerRequests(Worker worker, boolean approved) {
-        return worker.getRequests()
-                .stream()
+    public List<WorkerRequestDto> findAssignedWorkerRequests(Worker worker, boolean approved, String filter) {
+        List<Request> requests = worker.getRequests().stream()
                 .filter(request -> Objects.nonNull(request.getEndDate()))
                 .filter(request -> request.isApproved() == approved)
-                .sorted(Comparator.comparing(Request::getEndDate).reversed())
+                .collect(Collectors.toList());
+
+        Comparator<Request> comparator = FindSortingComparatorUtil.findSortingComparator(filter);
+
+        return requests.stream()
+                .sorted(comparator)
                 .map(request -> conversionService.convert(request, WorkerRequestDto.class))
                 .collect(Collectors.toList());
     }

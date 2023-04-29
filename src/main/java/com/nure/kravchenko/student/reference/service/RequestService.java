@@ -18,7 +18,7 @@ public interface RequestService {
 
     RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment) throws MessagingException;
 
-    List<WorkerRequestDto> findWaitingRequest(Worker worker);
+    List<WorkerRequestDto> findWaitingRequest(Worker worker, String filter);
 
-    List<WorkerRequestDto> findAssignedWorkerRequests(Worker worker, boolean approved);
+    List<WorkerRequestDto> findAssignedWorkerRequests(Worker worker, boolean approved, String filter);
 }
