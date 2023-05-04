@@ -34,9 +34,13 @@ public class ReportConstants {
 
     public static final String REPORT_DATE = "reportDate";
 
+    public static final String IMAGE = "image";
+
     public static final String HTML_EXTENSION = ".html";
 
     public static final String PDF_EXTENSION = ".pdf";
+
+    public static final String JPG_EXTENSION = "jpg";
 
     public static final String REPORT_LANGUAGE = "RU";
 

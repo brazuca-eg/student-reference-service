@@ -16,7 +16,7 @@ public interface RequestService {
 
     Request findById(Long id);
 
-    RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment) throws MessagingException;
+    RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment, byte[] signBytes) throws MessagingException;
 
     List<WorkerRequestDto> findWaitingRequest(Worker worker, String filter);
 

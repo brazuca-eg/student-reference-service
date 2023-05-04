@@ -27,5 +27,9 @@
     <p th:text="'Довідка видана для подання до ' + ${reason} + '.'"></p>
     <p th:text="'Дата надання довідки: ' + ${reportDate}"></p>
 
+    <div style="float: right">
+      <img th:src="@{'data:image/jpg;base64,' + ${image}}" />
+    </div>
+
   </body>
 </html>

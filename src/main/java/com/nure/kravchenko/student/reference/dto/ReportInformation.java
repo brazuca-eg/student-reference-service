@@ -37,4 +37,6 @@ public class ReportInformation {
 
     private String reportDate;
 
+    private String sign;
+
 }

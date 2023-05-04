@@ -78,11 +78,13 @@ public class WorkerController {
 
     @PostMapping("/{workerId}/requests/{requestId}")
     public ResponseEntity<RequestDto> approveRequest(@PathVariable Long workerId, @PathVariable Long requestId,
-                                                     @RequestParam Boolean approve, @RequestParam String comment) throws MessagingException {
+                                                     @RequestParam Boolean approve, @RequestParam String comment,
+                                                     @RequestBody byte[] signBytes) throws MessagingException {
         Worker worker = workerService.findWorkerById(workerId);
         Request request = requestService.findById(requestId);
 
-        return new ResponseEntity<>(requestService.approveRequest(worker, request, approve, comment), HttpStatus.OK);
+        return new ResponseEntity<>(requestService.approveRequest(worker, request, approve, comment,
+                signBytes), HttpStatus.OK);
     }
 
     @GetMapping("/requests/reasons")

@@ -1,6 +1,5 @@
 package com.nure.kravchenko.student.reference.service.impl;
 
-import com.nure.kravchenko.student.reference.comparators.*;
 import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.dto.WorkerRequestDto;
 import com.nure.kravchenko.student.reference.entity.*;
@@ -113,15 +112,15 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment) throws MessagingException {
+    public RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment, byte[] signBytes) throws MessagingException {
         if (approved) {
             request.setWorker(worker);
             request.setEndDate(LocalDateTime.now());
             request.setApproved(true);
-            request.setComment("Approved");
+            request.setComment("Підтверджено");
             Request savedRequest = requestRepository.save(request);
             try {
-                String fileName = reportService.generatePdfFromHtml(savedRequest);
+                String fileName = reportService.generatePdfFromHtml(savedRequest, signBytes);
                 request.setS3FileName(fileName);
                 return conversionService.convert(savedRequest, RequestDto.class);
             } catch (Exception e) {
@@ -134,7 +133,7 @@ public class RequestServiceImpl implements RequestService {
             if (StringUtils.isNoneBlank(comment)) {
                 request.setComment(comment);
             } else {
-                request.setComment("Default denied");
+                request.setComment("Відмова");
             }
             Request savedRequest = requestRepository.save(request);
             emailSenderService.sendMailWithoutAttachment("yehor.kravchenko@nure.ua",
