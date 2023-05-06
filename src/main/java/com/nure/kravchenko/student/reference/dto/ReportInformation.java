@@ -39,4 +39,6 @@ public class ReportInformation {
 
     private String sign;
 
+    private String workerInfo;
+
 }

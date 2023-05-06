@@ -75,6 +75,7 @@ public class ReportService {
         context.setVariable(START_DATE, reportInformation.getStartDate());
         context.setVariable(END_DATE, reportInformation.getEndDate());
         context.setVariable(REPORT_DATE, reportInformation.getReportDate());
+        context.setVariable(WORKER_INFO, reportInformation.getWorkerInfo());
         context.setVariable(IMAGE, reportInformation.getSign());
         return templateEngine.process("templates/thymeleaf_template", context);
     }
@@ -125,7 +126,7 @@ public class ReportService {
                     request.getReason().getDescription(), outputFolder);
 
             File created = new File(outputFolder);
-            storageService.uploadFile(created);
+            //storageService.uploadFile(created);
             String fileName = created.getName();
             created.delete();
             return fileName;

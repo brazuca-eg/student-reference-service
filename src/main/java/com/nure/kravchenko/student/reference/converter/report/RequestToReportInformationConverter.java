@@ -47,6 +47,11 @@ public class RequestToReportInformationConverter implements Converter<Request, R
         Faculty faculty = speciality.getFaculty();
         reportInformation.setFaculty(faculty.getName());
 
+        Worker worker = request.getWorker();
+        String jobTitle = worker.getJobTitle().toLowerCase();
+        reportInformation.setWorkerInfo(jobTitle + " - " + worker.getSurname() + StringUtils.SPACE + worker.getName() +
+                StringUtils.SPACE + worker.getFatherhood());
+
         return reportInformation;
     }
 

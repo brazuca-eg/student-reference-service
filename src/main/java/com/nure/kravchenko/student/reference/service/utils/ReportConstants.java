@@ -34,6 +34,8 @@ public class ReportConstants {
 
     public static final String REPORT_DATE = "reportDate";
 
+    public static final String WORKER_INFO = "workerInfo";
+
     public static final String IMAGE = "image";
 
     public static final String HTML_EXTENSION = ".html";
