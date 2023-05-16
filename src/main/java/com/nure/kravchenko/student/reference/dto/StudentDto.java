@@ -24,4 +24,8 @@ public class StudentDto {
 
     private boolean approved;
 
+    private String statusDescription;
+
+    private boolean active;
+
 }

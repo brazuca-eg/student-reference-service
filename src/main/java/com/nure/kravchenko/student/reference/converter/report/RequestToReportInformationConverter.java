@@ -49,7 +49,7 @@ public class RequestToReportInformationConverter implements Converter<Request, R
 
         Worker worker = request.getWorker();
         String jobTitle = worker.getJobTitle().toLowerCase();
-        reportInformation.setWorkerInfo(jobTitle + " - " + worker.getSurname() + StringUtils.SPACE + worker.getName() +
+        reportInformation.setWorkerInfo(jobTitle + StringUtils.SPACE + worker.getSurname() + StringUtils.SPACE + worker.getName() +
                 StringUtils.SPACE + worker.getFatherhood());
 
         return reportInformation;

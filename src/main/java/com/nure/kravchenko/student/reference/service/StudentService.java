@@ -10,6 +10,7 @@ import com.nure.kravchenko.student.reference.entity.Ticket;
 import com.nure.kravchenko.student.reference.entity.app.RequestType;
 import com.nure.kravchenko.student.reference.payload.RegistrationDto;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
+import com.nure.kravchenko.student.reference.payload.admin.UpdateStudentStatusDto;
 
 import java.util.List;
 
@@ -21,11 +22,15 @@ public interface StudentService {
 
     Student findStudentById(Long id);
 
+    StudentDto updateStatus(Student student, UpdateStudentStatusDto updateStudentStatusDto);
+
     StudentDto getStudentDto(Student student);
 
     Student save(Student student);
 
     StudentGroupDto getStudentGroupByStudentId(Long id);
+
+    List<StudentDto> getStudentsByGroup(String groupName);
 
     Student findByEmail(String email);
 

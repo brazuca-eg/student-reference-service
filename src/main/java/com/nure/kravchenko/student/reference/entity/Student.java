@@ -36,6 +36,10 @@ public class Student {
     @JsonBackReference
     private Ticket ticket;
 
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
+    private Status status;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "student_group_id")
     @JsonBackReference
@@ -48,6 +52,11 @@ public class Student {
     public void setTicket(Ticket ticket) {
         ticket.setStudent(this);
         this.ticket = ticket;
+    }
+
+    public void setStatus(Status status) {
+        status.setStudent(this);
+        this.status = status;
     }
 
     public void setStudentGroup(StudentGroup studentGroup) {

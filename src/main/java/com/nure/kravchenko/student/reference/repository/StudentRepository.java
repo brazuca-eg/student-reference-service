@@ -16,10 +16,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query(value = "SELECT s FROM Student s WHERE s.approved = false")
     List<Student> findWaitingApprovalStudents();
 
-//    @Query(value = "select * from student_group gr inner join student st on gr.id = st.student_group_id where st.id = :studentId ", nativeQuery = true)
-//    StudentGroup findGroupByStudentId(Long studentId);
-
-//    @Query(value = "INSERT INTO student(ticket_id) values(?1)", nativeQuery = true)
-//    Ticket addTicket(Long ticketId);
+    @Query(value = "SELECT * from student " +
+            "INNER JOIN student_group on student.student_group_id = student_group.id " +
+            "where student_group.name = ?1 limit 100", nativeQuery = true)
+    List<Student> getStudentsByGroup(String groupName);
 
 }

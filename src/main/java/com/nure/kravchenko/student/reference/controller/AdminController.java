@@ -58,6 +58,11 @@ public class AdminController {
         return new ResponseEntity<>(studentService.getStudentDto(studentService.findStudentById(id)), HttpStatus.OK);
     }
 
+    @GetMapping("/students/find")
+    public ResponseEntity<List<StudentDto>> getStudentsByGroup(@RequestParam String groupName) {
+        return new ResponseEntity<>(studentService.getStudentsByGroup(groupName), HttpStatus.OK);
+    }
+
     @GetMapping("/approve/workers")
     public ResponseEntity<List<WorkerDto>> getWaitingApproveWorkers() {
         return new ResponseEntity<>(workerService.getWaitingApproveWorkers(), HttpStatus.OK);
@@ -105,6 +110,15 @@ public class AdminController {
             return new ResponseEntity<>(studentService.approveStudentRegistration(student, studentGroup, ticket),
                     HttpStatus.OK);
         }
+    }
+
+    @PostMapping("/students/{studentId}/status")
+    public ResponseEntity<StudentDto> updateStudentStatus(@PathVariable Long studentId,
+                                                          @RequestBody @Valid UpdateStudentStatusDto updateStudentStatusDto) {
+        Student student = studentService.findStudentById(studentId);
+
+        return new ResponseEntity<>(studentService.updateStatus(student, updateStudentStatusDto),
+                HttpStatus.OK);
     }
 
     @PostMapping("/workers/{workerId}/approve")

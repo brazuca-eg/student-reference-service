@@ -9,6 +9,7 @@ import com.nure.kravchenko.student.reference.entity.app.RequestType;
 import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.RegistrationDto;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
+import com.nure.kravchenko.student.reference.payload.admin.UpdateStudentStatusDto;
 import com.nure.kravchenko.student.reference.repository.RequestRepository;
 import com.nure.kravchenko.student.reference.repository.StudentRepository;
 import com.nure.kravchenko.student.reference.service.StudentService;
@@ -25,7 +26,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
+
     private final StudentRepository studentRepository;
+
     private final ReportService reportService;
 
     private final RequestRepository requestRepository;
@@ -74,6 +77,19 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public StudentDto updateStatus(Student student, UpdateStudentStatusDto updateStudentStatusDto) {
+        Status status = student.getStatus();
+        status.setDescription(updateStudentStatusDto.getDescription());
+        status.setDescription(updateStudentStatusDto.getDescription());
+        status.setActive(false);
+
+        student.setStatus(status);
+
+        Student updated = studentRepository.save(student);
+        return conversionService.convert(updated, StudentDto.class);
+    }
+
+    @Override
     public StudentDto getStudentDto(Student student) {
         if (Objects.nonNull(student)) {
             return conversionService.convert(student, StudentDto.class);
@@ -98,6 +114,14 @@ public class StudentServiceImpl implements StudentService {
             return conversionService.convert(studentGroup, StudentGroupDto.class);
         }
         throw new NotFoundException("The user doesn't consist in a group");
+    }
+
+    @Override
+    public List<StudentDto> getStudentsByGroup(String groupName) {
+        List<Student> students = studentRepository.getStudentsByGroup(groupName);
+        return students.stream()
+                .map(student -> conversionService.convert(student, StudentDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -157,6 +181,7 @@ public class StudentServiceImpl implements StudentService {
             student.setStudentGroup(studentGroup);
             student.setTicket(ticket);
             student.setApproved(true);
+            student.setStatus(Status.builder().active(true).description("Активний студентський статус").build());
             Student updated = save(student);
             return conversionService.convert(updated, StudentDto.class);
         }

@@ -58,6 +58,10 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public RequestDto createRequest(Student student, CreateRequestDto requestPayload) {
         if (Objects.nonNull(student) && Objects.nonNull(student.getTicket())) {
+            if(!student.getStatus().isActive()){
+                throw new InvalidProvidedDataException("Особи з неактивним статусом студента не можуть " +
+                        "зробити запит на отримання довідки");
+            }
             Ticket ticket = student.getTicket();
             if (StringUtils.equalsIgnoreCase(ticket.getNumber(), requestPayload.getNumber()) &&
                     StringUtils.equalsIgnoreCase(ticket.getSerialNumber(), requestPayload.getSerialNumber())) {
