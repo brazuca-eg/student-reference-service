@@ -3,6 +3,7 @@ package com.nure.kravchenko.student.reference.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.List;
@@ -21,14 +22,20 @@ public class Worker {
 
     @Column(unique = true)
     private String email;
+
     @Column(length = 128)
     private String password;
 
-    @Column
+    @Column(length = 128)
+    @Length(min = 2)
     private String name;
-    @Column
+
+    @Column(length = 128)
+    @Length(min = 2)
     private String surname;
-    @Column
+
+    @Column(length = 128)
+    @Length(min = 2)
     private String fatherhood;
 
     @Column

@@ -14,21 +14,24 @@ import javax.validation.constraints.Size;
 @Builder
 public class RegistrationDto {
     @NotEmpty(message = "The name can't be empty")
+    @Size(min = 2,  message = "Ім'я має містити якнайменш 2 символи")
     private String name;
 
     @NotEmpty(message = "The surname can't be empty")
+    @Size(min = 2,  message = "Прізвище має містити якнайменш 2 символи")
     private String surname;
 
     @NotEmpty(message = "The fatherhood can't be empty")
+    @Size(min = 2,  message = "Ім'я по батькове має містити якнайменш 2 символи")
     private String fatherhood;
 
-    //@NotEmpty(message = "The gender can't be empty")
     private char gender;
 
     @NotEmpty(message = "The email can't be empty")
     private String email;
 
     @NotEmpty(message = "The password can't be empty")
+    @Size(min = 6, message = "Пароль має містити якнайменш шість символів")
     private String password;
 
     @NotEmpty(message = "The role can't be empty")
