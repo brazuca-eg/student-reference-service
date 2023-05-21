@@ -34,7 +34,7 @@ public class StudentGroupServiceImpl implements StudentGroupService {
         if (optionalStudentGroup.isPresent()) {
             return optionalStudentGroup.get();
         }
-        throw new NotFoundException("There are problems with group id");
+        throw new NotFoundException("Немає такої групи");
     }
 
     @Override

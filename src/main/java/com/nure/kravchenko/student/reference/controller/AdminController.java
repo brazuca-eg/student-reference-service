@@ -88,6 +88,11 @@ public class AdminController {
         return new ResponseEntity<>(studentGroupService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("students/{studentId}/group")
+    public ResponseEntity<StudentGroupDto> getGroupByStudentId(@PathVariable Long studentId) {
+        return new ResponseEntity<>(studentService.getStudentGroupByStudentId(studentId), HttpStatus.OK);
+    }
+
     @PostMapping("/students/{studentId}/approve")
     public ResponseEntity<StudentDto> approveStudentRegistration(
             @PathVariable Long studentId,
@@ -119,6 +124,17 @@ public class AdminController {
 
         return new ResponseEntity<>(studentService.updateStatus(student, updateStudentStatusDto),
                 HttpStatus.OK);
+    }
+
+    @PostMapping("/students/{studentId}/{groupId}")
+    public ResponseEntity<Boolean> updateGroupForStudent(@PathVariable Long studentId, @PathVariable Long groupId) {
+        Student student = studentService.findStudentById(studentId);
+        StudentGroup studentGroup = studentGroupService.findById(groupId);
+
+        student.setStudentGroup(studentGroup);
+        studentService.save(student);
+
+        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }
 
     @PostMapping("/workers/{workerId}/approve")
