@@ -11,6 +11,7 @@ import com.nure.kravchenko.student.reference.entity.app.RequestType;
 import com.nure.kravchenko.student.reference.payload.RegistrationDto;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
 import com.nure.kravchenko.student.reference.payload.admin.UpdateStudentStatusDto;
+import com.nure.kravchenko.student.reference.payload.admin.UpdateStudentTicketDto;
 
 import java.util.List;
 
@@ -21,6 +22,8 @@ public interface StudentService {
     StudentDto checkLogin(StudentLoginPayload loginPayload);
 
     Student findStudentById(Long id);
+
+    StudentDto updateStudentTicket(Student student, UpdateStudentTicketDto updateStudentTicketDto);
 
     StudentDto updateStatus(Student student, UpdateStudentStatusDto updateStudentStatusDto);
 

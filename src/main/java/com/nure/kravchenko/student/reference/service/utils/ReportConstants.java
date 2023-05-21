@@ -50,6 +50,6 @@ public class ReportConstants {
 
     public static final String REPORT_FONT = "static/verdana.ttf";
 
-    public static final DateTimeFormatter REPORT_DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public static final DateTimeFormatter REPORT_DATE_PATTERN = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
 }

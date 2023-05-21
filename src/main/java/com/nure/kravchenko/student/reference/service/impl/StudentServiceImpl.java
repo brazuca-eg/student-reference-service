@@ -10,6 +10,7 @@ import com.nure.kravchenko.student.reference.exception.NotFoundException;
 import com.nure.kravchenko.student.reference.payload.RegistrationDto;
 import com.nure.kravchenko.student.reference.payload.StudentLoginPayload;
 import com.nure.kravchenko.student.reference.payload.admin.UpdateStudentStatusDto;
+import com.nure.kravchenko.student.reference.payload.admin.UpdateStudentTicketDto;
 import com.nure.kravchenko.student.reference.repository.RequestRepository;
 import com.nure.kravchenko.student.reference.repository.StudentRepository;
 import com.nure.kravchenko.student.reference.service.StudentService;
@@ -74,6 +75,17 @@ public class StudentServiceImpl implements StudentService {
             return optionalStudent.get();
         }
         throw new NotFoundException("There are problems with user id");
+    }
+
+    @Override
+    public StudentDto updateStudentTicket(Student student, UpdateStudentTicketDto updateStudentTicketDto) {
+        Ticket ticket = student.getTicket();
+        ticket.setNumber(updateStudentTicketDto.getNumber());
+        ticket.setSerialNumber(updateStudentTicketDto.getSerialNumber());
+        ticket.setStartDate(updateStudentTicketDto.getStartDate());
+        ticket.setEndDate(updateStudentTicketDto.getEndDate());
+        student.setTicket(ticket);
+        return conversionService.convert(studentRepository.save(student), StudentDto.class);
     }
 
     @Override

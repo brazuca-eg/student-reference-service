@@ -126,6 +126,14 @@ public class AdminController {
                 HttpStatus.OK);
     }
 
+    @PostMapping("/students/{studentId}/ticket")
+    public ResponseEntity<StudentDto> updateStudentTicket(@PathVariable Long studentId,
+                                                          @RequestBody @Valid UpdateStudentTicketDto updateStudentStatusDto) {
+        Student student = studentService.findStudentById(studentId);
+
+        return new ResponseEntity<>(studentService.updateStudentTicket(student, updateStudentStatusDto), HttpStatus.OK);
+    }
+
     @PostMapping("/students/{studentId}/{groupId}")
     public ResponseEntity<Boolean> updateGroupForStudent(@PathVariable Long studentId, @PathVariable Long groupId) {
         Student student = studentService.findStudentById(studentId);
