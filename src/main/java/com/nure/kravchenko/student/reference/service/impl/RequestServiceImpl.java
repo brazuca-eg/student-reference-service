@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -61,6 +62,10 @@ public class RequestServiceImpl implements RequestService {
             if(!student.getStatus().isActive()){
                 throw new InvalidProvidedDataException("Особи з неактивним статусом студента не можуть " +
                         "зробити запит на отримання довідки");
+            }
+            if(LocalDate.now().isAfter(student.getTicket().getEndDate())){
+                throw new InvalidProvidedDataException("Ви не можете створити запит на створення довідки через " +
+                        "закінчення строку дії студентського квитка");
             }
             Ticket ticket = student.getTicket();
             if (StringUtils.equalsIgnoreCase(ticket.getNumber(), requestPayload.getNumber()) &&

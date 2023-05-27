@@ -28,8 +28,11 @@ public class RequestToReportInformationConverter implements Converter<Request, R
 
         reportInformation.setReason(request.getReason().getName());
         StudentGroup studentGroup = student.getStudentGroup();
-        reportInformation.setCourseNumber(String
-                .valueOf(LocalDateTime.now().getYear() - studentGroup.getStartYear().getYear()));
+        int year = LocalDateTime.now().getYear() - studentGroup.getStartYear().getYear();
+        if(year == 0){
+            year = 1;
+        }
+        reportInformation.setCourseNumber(String.valueOf(year));
         String learnForm = studentGroup.getLearnForm();
         if (StringUtils.equalsIgnoreCase("Денна", learnForm)) {
             reportInformation.setLearnForm("денної");

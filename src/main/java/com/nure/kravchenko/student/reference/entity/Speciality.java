@@ -21,7 +21,7 @@ public class Speciality {
     @Column
     private String name;
 
-    @Column
+    @Column(length = 6)
     private String shortName;
 
     @Column
