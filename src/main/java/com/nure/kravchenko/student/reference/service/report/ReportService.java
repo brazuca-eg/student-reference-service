@@ -88,7 +88,14 @@ public class ReportService {
         if (student.isApproved()) {
             ReportInformation reportInformation = conversionService.convert(request, ReportInformation.class);
 
-            String directory = new File("./").getAbsolutePath();
+            String directory = null;
+            try {
+                directory = new File(".").getCanonicalPath();
+                System.out.println(directory);
+            } catch (IOException e) {
+                throw new RuntimeException("error with base directory");
+            }
+
             String signImagePath = directory.substring(0, directory.length() - 1)
                     + "src\\main\\resources\\templates\\";
             ByteArrayInputStream bis = new ByteArrayInputStream(signBytes);
