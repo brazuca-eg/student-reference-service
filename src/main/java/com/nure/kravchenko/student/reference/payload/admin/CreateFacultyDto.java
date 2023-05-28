@@ -18,7 +18,7 @@ public class CreateFacultyDto {
     private String name;
 
     @NotEmpty(message = "The short name  of the faculty can't be empty")
-    @Size(min = 2, max = 2, message = "The short name of the faculty must be with 2 chars")
+    @Size(min = 2, max = 5, message = "The short name of the faculty must be with 2 chars")
     private String shortName;
 
 }
