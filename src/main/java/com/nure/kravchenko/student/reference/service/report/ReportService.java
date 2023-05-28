@@ -90,8 +90,7 @@ public class ReportService {
 
             String path = directory.substring(0, directory.length() - 1) + "src/main/resources/";
             LocalDate currentDate = LocalDate.now();
-            String reportName = student.getSurname() + UNDERSCORE + student.getName() + UNDERSCORE +
-                    student.getFatherhood() + UNDERSCORE + currentDate + UNDERSCORE +
+            String reportName = student.getEmail().substring(0, 5)  + UNDERSCORE + currentDate + UNDERSCORE +
                     RandomUtils.getRandomNumber(MIN, MAX) + PDF_EXTENSION;
             String outputFolder = path + reportName;
 
