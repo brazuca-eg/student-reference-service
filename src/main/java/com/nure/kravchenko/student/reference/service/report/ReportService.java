@@ -101,10 +101,8 @@ public class ReportService {
             } catch (FileNotFoundException e) {
                 throw new RuntimeException("Exc 103");
             }
-
             ClassLoader classLoader = getClass().getClassLoader();
-            File fontFile = new File(Objects.requireNonNull(classLoader
-                    .getResource(REPORT_FONT)).getFile());
+            File fontFile = new File("/app/src/main/resources/static/verdana.ttf");
 
             ITextRenderer renderer = new ITextRenderer();
             try {
@@ -119,13 +117,13 @@ public class ReportService {
             try {
                 renderer.createPDF(outputStream);
             } catch (DocumentException e) {
-                throw new RuntimeException("Exc 121");
+                throw new RuntimeException("Exc 121 "  + e.getMessage());
             }
 
             try {
                 outputStream.close();
             } catch (IOException e) {
-                throw new RuntimeException("Exc 127");
+                throw new RuntimeException("Exc 127 "  + e.getMessage());
             }
 
             try {
@@ -133,7 +131,7 @@ public class ReportService {
                         conversionService.convert(request, String.class),
                         request.getReason().getDescription(), outputFolder);
             } catch (MessagingException e) {
-                throw new RuntimeException("Exc 136");
+                throw new RuntimeException("Exc 136"  + e.getMessage());
             }
 
             File created = new File(outputFolder);
