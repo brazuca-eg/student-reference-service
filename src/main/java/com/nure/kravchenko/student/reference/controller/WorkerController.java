@@ -82,7 +82,7 @@ public class WorkerController {
     @PostMapping("/{workerId}/requests/{requestId}")
     public ResponseEntity<RequestDto> approveRequest(@PathVariable Long workerId, @PathVariable Long requestId,
                                                      @RequestParam Boolean approve, @RequestParam String comment,
-                                                     @RequestBody byte[] signBytes) throws MessagingException {
+                                                     @RequestBody byte[] signBytes){
         log.info(String.format("Starting approving request with such params: approve = %s, comment = %s," +
                 "signBytes = %s", approve, comment, Arrays.toString(signBytes)));
         Worker worker = workerService.findWorkerById(workerId);

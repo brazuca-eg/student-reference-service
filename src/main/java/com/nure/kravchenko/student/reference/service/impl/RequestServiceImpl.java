@@ -121,7 +121,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment, byte[] signBytes) throws MessagingException {
+    public RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment, byte[] signBytes) {
         if (approved) {
             request.setWorker(worker);
             request.setEndDate(LocalDateTime.now());
@@ -133,7 +133,7 @@ public class RequestServiceImpl implements RequestService {
                 request.setS3FileName(fileName);
                 return conversionService.convert(savedRequest, RequestDto.class);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Problems with generating pdf doc");
             }
         } else {
             request.setApproved(false);
@@ -145,8 +145,12 @@ public class RequestServiceImpl implements RequestService {
                 request.setComment("Відмова");
             }
             Request savedRequest = requestRepository.save(request);
-            emailSenderService.sendMailWithoutAttachment("yehor.kravchenko@nure.ua",
-                    conversionService.convert(request, String.class), request.getReason().getDescription());
+            try {
+                emailSenderService.sendMailWithoutAttachment("yehor.kravchenko@nure.ua",
+                        conversionService.convert(request, String.class), request.getReason().getDescription());
+            } catch (MessagingException e) {
+                throw new RuntimeException("Problems with sending email");
+            }
             return conversionService.convert(savedRequest, RequestDto.class);
         }
     }
