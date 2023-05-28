@@ -1,5 +1,6 @@
 package com.nure.kravchenko.student.reference.service.report;
 
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
 import com.nure.kravchenko.student.reference.dto.ReportInformation;
 import com.nure.kravchenko.student.reference.entity.Request;
@@ -16,10 +17,9 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.Locale;
@@ -77,7 +77,7 @@ public class ReportService {
     }
 
     @Transactional
-    public String generatePdfFromHtml(Request request, byte[] signBytes) throws Exception {
+    public String generatePdfFromHtml(Request request, byte[] signBytes) {
         Student student = request.getStudent();
         if (student.isApproved()) {
             ReportInformation reportInformation = conversionService.convert(request, ReportInformation.class);
@@ -95,23 +95,46 @@ public class ReportService {
                     RandomUtils.getRandomNumber(MIN, MAX) + PDF_EXTENSION;
             String outputFolder = path + reportName;
 
-            OutputStream outputStream = new FileOutputStream(outputFolder);
+            OutputStream outputStream = null;
+            try {
+                outputStream = new FileOutputStream(outputFolder);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException("Exc 103");
+            }
 
             ClassLoader classLoader = getClass().getClassLoader();
             File fontFile = new File(Objects.requireNonNull(classLoader
                     .getResource(REPORT_FONT)).getFile());
 
             ITextRenderer renderer = new ITextRenderer();
-            renderer.getFontResolver().addFont(fontFile.getPath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            try {
+                renderer.getFontResolver().addFont(fontFile.getPath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            } catch (DocumentException e) {
+                throw new RuntimeException("Exc 112");
+            } catch (IOException e) {
+                throw new RuntimeException("Exc 114");
+            }
             renderer.setDocumentFromString(parseThymeleafTemplate(reportInformation));
             renderer.layout();
-            renderer.createPDF(outputStream);
+            try {
+                renderer.createPDF(outputStream);
+            } catch (DocumentException e) {
+                throw new RuntimeException("Exc 121");
+            }
 
-            outputStream.close();
+            try {
+                outputStream.close();
+            } catch (IOException e) {
+                throw new RuntimeException("Exc 127");
+            }
 
-            emailSenderService.sendMailWithAttachment("yehor.kravchenko@nure.ua",
-                    conversionService.convert(request, String.class),
-                    request.getReason().getDescription(), outputFolder);
+            try {
+                emailSenderService.sendMailWithAttachment("yehor.kravchenko@nure.ua",
+                        conversionService.convert(request, String.class),
+                        request.getReason().getDescription(), outputFolder);
+            } catch (MessagingException e) {
+                throw new RuntimeException("Exc 136");
+            }
 
             File created = new File(outputFolder);
             storageService.uploadFile(created);
