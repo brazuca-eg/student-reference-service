@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 
+@Log4j
 @Service
 public class StorageService {
 
@@ -26,6 +28,7 @@ public class StorageService {
     }
 
     public String uploadFile(File file) {
+        log.info("Starting uploadFile to S3");
         s3Client.putObject(new PutObjectRequest(bucketName, file.getName(), file));
 
         return "File uploaded : " + file.getName();

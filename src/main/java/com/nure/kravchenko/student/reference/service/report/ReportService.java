@@ -7,6 +7,7 @@ import com.nure.kravchenko.student.reference.entity.Student;
 import com.nure.kravchenko.student.reference.exception.InvalidProvidedDataException;
 import com.nure.kravchenko.student.reference.service.s3.StorageService;
 import com.nure.kravchenko.student.reference.service.utils.RandomUtils;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ import java.util.Objects;
 import static com.nure.kravchenko.student.reference.service.utils.ProjectConstants.UNDERSCORE;
 import static com.nure.kravchenko.student.reference.service.utils.ReportConstants.*;
 
+@Log4j
 @Service
 public class ReportService {
 
@@ -82,6 +84,7 @@ public class ReportService {
 
     @Transactional
     public String generatePdfFromHtml(Request request, byte[] signBytes) throws Exception {
+        log.info("Starting generatePdf");
         Student student = request.getStudent();
         if (student.isApproved()) {
             ReportInformation reportInformation = conversionService.convert(request, ReportInformation.class);

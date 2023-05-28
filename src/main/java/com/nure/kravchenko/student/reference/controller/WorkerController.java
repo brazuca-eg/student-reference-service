@@ -5,6 +5,7 @@ import com.nure.kravchenko.student.reference.entity.Request;
 import com.nure.kravchenko.student.reference.entity.Worker;
 import com.nure.kravchenko.student.reference.service.*;
 import com.nure.kravchenko.student.reference.service.s3.StorageService;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -12,8 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import java.util.Arrays;
 import java.util.List;
 
+@Log4j
 @RestController
 @RequestMapping("/workers")
 public class WorkerController {
@@ -80,6 +83,8 @@ public class WorkerController {
     public ResponseEntity<RequestDto> approveRequest(@PathVariable Long workerId, @PathVariable Long requestId,
                                                      @RequestParam Boolean approve, @RequestParam String comment,
                                                      @RequestBody byte[] signBytes) throws MessagingException {
+        log.info(String.format("Starting approving request with such params: approve = %s, comment = %s," +
+                "signBytes = %s", approve, comment, Arrays.toString(signBytes)));
         Worker worker = workerService.findWorkerById(workerId);
         Request request = requestService.findById(requestId);
 
