@@ -102,7 +102,7 @@ public class ReportService {
                 throw new RuntimeException("Exc 103");
             }
             ClassLoader classLoader = getClass().getClassLoader();
-            File fontFile = new File("/app/src/main/resources/static/verdana.ttf");
+            File fontFile = new File("~/src/main/resources/static/verdana.ttf");
 
             ITextRenderer renderer = new ITextRenderer();
             try {
