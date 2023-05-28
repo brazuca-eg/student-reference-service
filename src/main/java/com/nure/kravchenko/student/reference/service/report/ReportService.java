@@ -87,18 +87,10 @@ public class ReportService {
             ReportInformation reportInformation = conversionService.convert(request, ReportInformation.class);
 
             String directory = new File("./").getAbsolutePath();
-            String signImagePath = directory.substring(0, directory.length() - 1)
-                    + "src\\main\\resources\\templates\\";
-            ByteArrayInputStream bis = new ByteArrayInputStream(signBytes);
-            BufferedImage bImage2 = ImageIO.read(bis);
-            String signImage = signImagePath + "sign" + "." + JPG_EXTENSION;
-            ImageIO.write(bImage2, JPG_EXTENSION, new File(signImage));
-            File createdSignImage = new File(signImage);
-            String base64ImageCode = Base64.getEncoder()
-                    .encodeToString(Files.readAllBytes(createdSignImage.toPath()));
+
+            String base64ImageCode = Base64.getEncoder().encodeToString(signBytes);
             assert reportInformation != null;
             reportInformation.setSign(base64ImageCode);
-            createdSignImage.delete();
 
             String path = directory.substring(0, directory.length() - 1) + "src\\main\\resources\\reports\\";
             LocalDate currentDate = LocalDate.now();
