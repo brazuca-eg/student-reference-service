@@ -88,7 +88,7 @@ public class ReportService {
             assert reportInformation != null;
             reportInformation.setSign(base64ImageCode);
 
-            String path = directory.substring(0, directory.length() - 1) + "src/main/resources/reports/";
+            String path = directory.substring(0, directory.length() - 1) + "src/main/resources/";
             LocalDate currentDate = LocalDate.now();
             String reportName = student.getSurname() + UNDERSCORE + student.getName() + UNDERSCORE +
                     student.getFatherhood() + UNDERSCORE + currentDate + UNDERSCORE +
@@ -99,7 +99,7 @@ public class ReportService {
             try {
                 outputStream = new FileOutputStream(outputFolder);
             } catch (FileNotFoundException e) {
-                throw new RuntimeException("Exc 103");
+                throw new RuntimeException("Exc 103" + e.getMessage());
             }
             ClassLoader classLoader = getClass().getClassLoader();
             File fontFile = new File("/app/target/classes/static/verdana.ttf");
@@ -108,7 +108,7 @@ public class ReportService {
             try {
                 renderer.getFontResolver().addFont(fontFile.getPath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
             } catch (DocumentException e) {
-                throw new RuntimeException("Exc 112");
+                throw new RuntimeException("Exc 112" + e.getMessage());
             } catch (IOException e) {
                 throw new RuntimeException("Exc 114: " + e.getMessage());
             }
