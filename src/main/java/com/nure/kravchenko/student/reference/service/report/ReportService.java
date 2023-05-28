@@ -88,7 +88,7 @@ public class ReportService {
             assert reportInformation != null;
             reportInformation.setSign(base64ImageCode);
 
-            String path = directory.substring(0, directory.length() - 1) + "src\\main\\resources\\reports\\";
+            String path = directory.substring(0, directory.length() - 1) + "src/main/resources/reports/";
             LocalDate currentDate = LocalDate.now();
             String reportName = student.getSurname() + UNDERSCORE + student.getName() + UNDERSCORE +
                     student.getFatherhood() + UNDERSCORE + currentDate + UNDERSCORE +
