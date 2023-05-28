@@ -77,7 +77,7 @@ public class ReportService {
     }
 
     @Transactional
-    public String generatePdfFromHtml(Request request, byte[] signBytes) {
+    public String generatePdfFromHtml(Request request, byte[] signBytes) throws IOException, DocumentException, MessagingException {
         Student student = request.getStudent();
         if (student.isApproved()) {
             ReportInformation reportInformation = conversionService.convert(request, ReportInformation.class);
@@ -90,48 +90,25 @@ public class ReportService {
 
             String path = directory.substring(0, directory.length() - 1) + "src/main/resources/";
             LocalDate currentDate = LocalDate.now();
-            String reportName = student.getEmail().substring(0, 5)  + UNDERSCORE + currentDate + UNDERSCORE +
+            String reportName = student.getEmail().substring(0, 5) + UNDERSCORE + currentDate + UNDERSCORE +
                     RandomUtils.getRandomNumber(MIN, MAX) + PDF_EXTENSION;
             String outputFolder = path + reportName;
 
-            OutputStream outputStream = null;
-            try {
-                outputStream = new FileOutputStream(outputFolder);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException("Exc 103" + e.getMessage());
-            }
-            ClassLoader classLoader = getClass().getClassLoader();
+            OutputStream outputStream = new FileOutputStream(outputFolder);
             File fontFile = new File("/app/target/classes/static/verdana.ttf");
 
             ITextRenderer renderer = new ITextRenderer();
-            try {
-                renderer.getFontResolver().addFont(fontFile.getPath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-            } catch (DocumentException e) {
-                throw new RuntimeException("Exc 112" + e.getMessage());
-            } catch (IOException e) {
-                throw new RuntimeException("Exc 114: " + e.getMessage());
-            }
+            renderer.getFontResolver().addFont(fontFile.getPath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
             renderer.setDocumentFromString(parseThymeleafTemplate(reportInformation));
             renderer.layout();
-            try {
-                renderer.createPDF(outputStream);
-            } catch (DocumentException e) {
-                throw new RuntimeException("Exc 121 "  + e.getMessage());
-            }
+            renderer.createPDF(outputStream);
 
-            try {
-                outputStream.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Exc 127 "  + e.getMessage());
-            }
+            outputStream.close();
 
-            try {
-                emailSenderService.sendMailWithAttachment("yehor.kravchenko@nure.ua",
-                        conversionService.convert(request, String.class),
-                        request.getReason().getDescription(), outputFolder);
-            } catch (MessagingException e) {
-                throw new RuntimeException("Exc 136"  + e.getMessage());
-            }
+            emailSenderService.sendMailWithAttachment("yehor.kravchenko@nure.ua",
+                    conversionService.convert(request, String.class),
+                    request.getReason().getDescription(), outputFolder);
+
 
             File created = new File(outputFolder);
             storageService.uploadFile(created);

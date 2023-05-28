@@ -1,5 +1,6 @@
 package com.nure.kravchenko.student.reference.service.impl;
 
+import com.lowagie.text.DocumentException;
 import com.nure.kravchenko.student.reference.dto.RequestDto;
 import com.nure.kravchenko.student.reference.dto.WorkerRequestDto;
 import com.nure.kravchenko.student.reference.entity.*;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -59,11 +61,11 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public RequestDto createRequest(Student student, CreateRequestDto requestPayload) {
         if (Objects.nonNull(student) && Objects.nonNull(student.getTicket())) {
-            if(!student.getStatus().isActive()){
+            if (!student.getStatus().isActive()) {
                 throw new InvalidProvidedDataException("Особи з неактивним статусом студента не можуть " +
                         "зробити запит на отримання довідки");
             }
-            if(LocalDate.now().isAfter(student.getTicket().getEndDate())){
+            if (LocalDate.now().isAfter(student.getTicket().getEndDate())) {
                 throw new InvalidProvidedDataException("Ви не можете створити запит на створення довідки через " +
                         "закінчення строку дії студентського квитка");
             }
@@ -121,20 +123,16 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment, byte[] signBytes) {
+    public RequestDto approveRequest(Worker worker, Request request, Boolean approved, String comment, byte[] signBytes) throws MessagingException, DocumentException, IOException {
         if (approved) {
             request.setWorker(worker);
             request.setEndDate(LocalDateTime.now());
             request.setApproved(true);
             request.setComment("Підтверджено");
             Request savedRequest = requestRepository.save(request);
-           // try {
-                String fileName = reportService.generatePdfFromHtml(savedRequest, signBytes);
-                request.setS3FileName(fileName);
-                return conversionService.convert(savedRequest, RequestDto.class);
-//            } catch (Exception e) {
-//                throw new RuntimeException("Problems with generating pdf doc");
-//            }
+            String fileName = reportService.generatePdfFromHtml(savedRequest, signBytes);
+            request.setS3FileName(fileName);
+            return conversionService.convert(savedRequest, RequestDto.class);
         } else {
             request.setApproved(false);
             request.setWorker(worker);
