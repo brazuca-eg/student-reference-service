@@ -19,11 +19,13 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.Locale;
-import java.util.Objects;
 
 import static com.nure.kravchenko.student.reference.service.utils.ProjectConstants.UNDERSCORE;
 import static com.nure.kravchenko.student.reference.service.utils.ReportConstants.*;
@@ -90,8 +92,9 @@ public class ReportService {
 
             String path = directory.substring(0, directory.length() - 1) + "src/main/resources/";
             LocalDate currentDate = LocalDate.now();
-            String reportName = student.getEmail().substring(0, 5) + UNDERSCORE + currentDate + UNDERSCORE +
-                    RandomUtils.getRandomNumber(MIN, MAX) + PDF_EXTENSION;
+            String email = student.getEmail();
+            String reportName = email.substring(0, email.indexOf('@')).toUpperCase() + UNDERSCORE + currentDate
+                    + UNDERSCORE + RandomUtils.getRandomNumber(MIN, MAX) + PDF_EXTENSION;
             String outputFolder = path + reportName;
 
             OutputStream outputStream = new FileOutputStream(outputFolder);
