@@ -128,13 +128,13 @@ public class RequestServiceImpl implements RequestService {
             request.setApproved(true);
             request.setComment("Підтверджено");
             Request savedRequest = requestRepository.save(request);
-            try {
+           // try {
                 String fileName = reportService.generatePdfFromHtml(savedRequest, signBytes);
                 request.setS3FileName(fileName);
                 return conversionService.convert(savedRequest, RequestDto.class);
-            } catch (Exception e) {
-                throw new RuntimeException("Problems with generating pdf doc");
-            }
+//            } catch (Exception e) {
+//                throw new RuntimeException("Problems with generating pdf doc");
+//            }
         } else {
             request.setApproved(false);
             request.setWorker(worker);
