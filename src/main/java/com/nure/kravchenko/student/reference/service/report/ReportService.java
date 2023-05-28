@@ -112,7 +112,7 @@ public class ReportService {
             } catch (DocumentException e) {
                 throw new RuntimeException("Exc 112");
             } catch (IOException e) {
-                throw new RuntimeException("Exc 114");
+                throw new RuntimeException("Exc 114", e.getCause());
             }
             renderer.setDocumentFromString(parseThymeleafTemplate(reportInformation));
             renderer.layout();
